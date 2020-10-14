@@ -1,0 +1,10 @@
+Bundle-Name: Liferay Travels API
+Bundle-SymbolicName: com.liferay.travels.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.liferay.travels.exception,\
+	com.liferay.travels.model,\
+	com.liferay.travels.service,\
+	com.liferay.travels.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../liferay-travels-service/service.xml

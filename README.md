@@ -21,3 +21,9 @@ Some pre-requisites must be achieved to be able to follow the workshop
 ### Required knowledge:
 * Experience with Java and Liferay is required.
 * Knowledge of APIs (REST or GraphQL) and OpenAPI specification is recommended.
+
+## Step 1: Prepare environment
+To avoid wasting time during the workshop it is strongly recommended to initialize the Liferay Workspace with one of the following commands:
+`blade server init` or `gw initBundle`. This commands will download the Liferay bundle, which size is about 1GB.
+
+We will use the Liferay Portal 7.3 GA6 version. A Liferay service module is provided to be used during the workshop.

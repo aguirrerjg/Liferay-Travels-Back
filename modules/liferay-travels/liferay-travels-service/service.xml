@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.3.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_3_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.liferay.travels">
+	<author>Javier de Arcos</author>
+	<namespace>LiferayTravels</namespace>
+	<entity local-service="true" name="Stage" remote-service="true" uuid="true">
+		<column name="stageId" primary="true" type="long" />
+		<column name="name" type="String" />
+		<column name="description" type="String" />
+		<column name="place" type="String" />
+		<column name="image" type="String" />
+		<column name="tripId" type="long" />
+
+		<finder name="TripId" return-type="Collection">
+			<finder-column name="tripId" />
+		</finder>
+
+		<reference entity="Trip" package-path="com.liferay.travels" />
+	</entity>
+	<entity local-service="true" name="Trip" remote-service="true" uuid="true">
+		<column name="tripId" primary="true" type="long" />
+		<column name="name" type="String" />
+		<column name="description" type="String" />
+		<column name="startingDate" type="Date" />
+		<column name="image" type="String" />
+
+		<order by="asc">
+			<order-column name="startingDate" />
+		</order>
+	</entity>
+</service-builder>
