@@ -65,3 +65,4 @@ We make use of the addAction base methods in resources to implement the actions 
 
 The steps are:
 - Modify the OpenAPI with new path parameters and run REST Builder
+- Implement the new feature using addAction base methods

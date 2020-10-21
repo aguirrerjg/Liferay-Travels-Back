@@ -1,5 +1,6 @@
 package com.liferay.travels.rest.internal.resource.v1_0;
 
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.travels.rest.dto.v1_0.Stage;
 import com.liferay.travels.rest.resource.v1_0.StageResource;
@@ -12,6 +13,7 @@ import org.osgi.service.component.annotations.ServiceScope;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -32,7 +34,16 @@ public class StageResourceImpl extends BaseStageResourceImpl {
 	public Page<Stage> getTripStagesPage(@NotNull Long tripId) throws Exception {
 		List<com.liferay.travels.model.Stage> stages = stageService.getStages(tripId);
 
-		return Page.of(stages.stream().map(this::toStage).collect(Collectors.toList()));
+		return Page.of(getStagesActions(tripId), stages.stream().map(this::toStage).collect(Collectors.toList()));
+	}
+
+	private Map<String, Map<String, String>> getStagesActions(long tripId) throws Exception {
+		com.liferay.travels.model.Trip trip = tripLocalService.getTrip(tripId);
+
+		return HashMapBuilder
+				.put("get", addAction("VIEW", trip, "getTripStagesPage"))
+				.put("add_stage", addAction("ADD_STAGE", trip, "postTripStage"))
+				.build();
 	}
 
 	@Override
@@ -54,6 +65,7 @@ public class StageResourceImpl extends BaseStageResourceImpl {
 	private Stage toStage(com.liferay.travels.model.Stage stage) {
 		Stage stageResource = new Stage();
 
+		stageResource.setActions(getStageActions(stage));
 		stageResource.setId(stage.getStageId());
 		stageResource.setName(stage.getName());
 		stageResource.setDescription(stage.getDescription());
@@ -63,6 +75,16 @@ public class StageResourceImpl extends BaseStageResourceImpl {
 		return stageResource;
 	}
 
+	private Map<String, Map<String, String>> getStageActions(com.liferay.travels.model.Stage stage) {
+		return HashMapBuilder
+				.put("get", addAction("VIEW", stage, "getStage"))
+				.put("update", addAction("UPDATE", stage, "putStage"))
+				.put("delete", addAction("DELETE", stage, "deleteStage"))
+				.build();
+	}
+
 	@Reference
 	private StageService stageService;
+	@Reference
+	private TripLocalService tripLocalService;
 }
