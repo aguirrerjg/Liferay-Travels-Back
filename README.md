@@ -27,3 +27,11 @@ To avoid wasting time during the workshop it is strongly recommended to initiali
 `blade server init` or `gw initBundle`. This commands will download the Liferay bundle, which size is about 1GB.
 
 We will use the Liferay Portal 7.3 GA6 version. A Liferay service module is provided to be used during the workshop.
+
+## Step 2: Explore the APIs
+
+Once the bundle is initialized you can start the portal (running `bundles/tomcat-9.0.37/bin/startup.sh`) and log in.
+
+Once you are logged go to the url `http://localhost/o/api` to find the API Explorer and start exploring and trying the REST and GraphQL APIs.
+
+Try creating some users and adding them to the site. Then recover them using the REST and GraphQL APIs
