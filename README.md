@@ -51,4 +51,4 @@ In this step we will create a custom API for our Travel application, with Trips 
 The steps are:
 - Create a new module with blade `blade create -t rest-builder -p com.liferay.travels.rest liferay-travels-rest`
 - Define our API with the OpenAPI YAML file and the config YAML file and execute the REST Builder
-
+- Implement the resource endpoints in the ResourceImpl classes

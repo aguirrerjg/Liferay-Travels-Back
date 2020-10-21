@@ -13,7 +13,8 @@ buildscript {
 apply plugin: "com.liferay.portal.tools.rest.builder"
 
 dependencies {
-	compile project(":modules:liferay-travels-rest:liferay-travels-rest-api")
+	compileOnly project(":modules:liferay-travels:liferay-travels-api")
+	compileOnly project(":modules:liferay-travels-rest:liferay-travels-rest-api")
 
 	compileOnly group: "com.fasterxml.jackson.core", name: "jackson-annotations", version: "2.10.3"
 	compileOnly group: "com.liferay", name: "com.liferay.petra.function"
