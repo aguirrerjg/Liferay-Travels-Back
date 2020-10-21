@@ -3,6 +3,7 @@ package com.liferay.travels.rest.client.resource.v1_0;
 import com.liferay.travels.rest.client.dto.v1_0.Trip;
 import com.liferay.travels.rest.client.http.HttpInvoker;
 import com.liferay.travels.rest.client.pagination.Page;
+import com.liferay.travels.rest.client.pagination.Pagination;
 import com.liferay.travels.rest.client.problem.Problem;
 import com.liferay.travels.rest.client.serdes.v1_0.TripSerDes;
 
@@ -25,9 +26,15 @@ public interface TripResource {
 		return new Builder();
 	}
 
-	public Page<Trip> getTripsPage() throws Exception;
+	public Page<Trip> getTripsPage(
+			String search, String filterString, Pagination pagination,
+			String sortString)
+		throws Exception;
 
-	public HttpInvoker.HttpResponse getTripsPageHttpResponse() throws Exception;
+	public HttpInvoker.HttpResponse getTripsPageHttpResponse(
+			String search, String filterString, Pagination pagination,
+			String sortString)
+		throws Exception;
 
 	public Trip postTrip(Trip trip) throws Exception;
 
@@ -104,8 +111,13 @@ public interface TripResource {
 
 	public static class TripResourceImpl implements TripResource {
 
-		public Page<Trip> getTripsPage() throws Exception {
-			HttpInvoker.HttpResponse httpResponse = getTripsPageHttpResponse();
+		public Page<Trip> getTripsPage(
+				String search, String filterString, Pagination pagination,
+				String sortString)
+			throws Exception {
+
+			HttpInvoker.HttpResponse httpResponse = getTripsPageHttpResponse(
+				search, filterString, pagination, sortString);
 
 			String content = httpResponse.getContent();
 
@@ -127,7 +139,9 @@ public interface TripResource {
 			}
 		}
 
-		public HttpInvoker.HttpResponse getTripsPageHttpResponse()
+		public HttpInvoker.HttpResponse getTripsPageHttpResponse(
+				String search, String filterString, Pagination pagination,
+				String sortString)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -150,6 +164,25 @@ public interface TripResource {
 			}
 
 			httpInvoker.httpMethod(HttpInvoker.HttpMethod.GET);
+
+			if (search != null) {
+				httpInvoker.parameter("search", String.valueOf(search));
+			}
+
+			if (filterString != null) {
+				httpInvoker.parameter("filter", filterString);
+			}
+
+			if (pagination != null) {
+				httpInvoker.parameter(
+					"page", String.valueOf(pagination.getPage()));
+				httpInvoker.parameter(
+					"pageSize", String.valueOf(pagination.getPageSize()));
+			}
+
+			if (sortString != null) {
+				httpInvoker.parameter("sort", sortString);
+			}
 
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +

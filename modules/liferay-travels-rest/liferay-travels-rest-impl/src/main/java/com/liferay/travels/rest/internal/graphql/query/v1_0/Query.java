@@ -8,6 +8,7 @@ import com.liferay.portal.vulcan.accept.language.AcceptLanguage;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.pagination.Page;
+import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.travels.rest.dto.v1_0.Stage;
 import com.liferay.travels.rest.dto.v1_0.Trip;
 import com.liferay.travels.rest.resource.v1_0.StageResource;
@@ -80,14 +81,25 @@ public class Query {
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {trips{items {__}, page, pageSize, totalCount}}"}' -u 'test@liferay.com:test'
+	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {trips(filter: ___, page: ___, pageSize: ___, search: ___, sorts: ___){items {__}, page, pageSize, totalCount}}"}' -u 'test@liferay.com:test'
 	 */
 	@GraphQLField
-	public TripPage trips() throws Exception {
+	public TripPage trips(
+			@GraphQLName("search") String search,
+			@GraphQLName("filter") String filterString,
+			@GraphQLName("pageSize") int pageSize,
+			@GraphQLName("page") int page,
+			@GraphQLName("sort") String sortsString)
+		throws Exception {
+
 		return _applyComponentServiceObjects(
 			_tripResourceComponentServiceObjects,
 			this::_populateResourceContext,
-			tripResource -> new TripPage(tripResource.getTripsPage()));
+			tripResource -> new TripPage(
+				tripResource.getTripsPage(
+					search, _filterBiFunction.apply(tripResource, filterString),
+					Pagination.of(page, pageSize),
+					_sortsBiFunction.apply(tripResource, sortsString))));
 	}
 
 	/**

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
+import com.liferay.petra.function.UnsafeTriConsumer;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -27,6 +28,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.odata.entity.EntityField;
 import com.liferay.portal.odata.entity.EntityModel;
+import com.liferay.portal.search.test.util.SearchTestRule;
 import com.liferay.portal.test.log.CaptureAppender;
 import com.liferay.portal.test.log.Log4JLoggerTestUtil;
 import com.liferay.portal.test.rule.Inject;
@@ -35,16 +37,20 @@ import com.liferay.portal.vulcan.resource.EntityModelResource;
 import com.liferay.travels.rest.client.dto.v1_0.Trip;
 import com.liferay.travels.rest.client.http.HttpInvoker;
 import com.liferay.travels.rest.client.pagination.Page;
+import com.liferay.travels.rest.client.pagination.Pagination;
 import com.liferay.travels.rest.client.resource.v1_0.TripResource;
 import com.liferay.travels.rest.client.serdes.v1_0.TripSerDes;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import java.text.DateFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +62,7 @@ import javax.annotation.Generated;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Level;
@@ -185,7 +192,221 @@ public abstract class BaseTripResourceTestCase {
 
 	@Test
 	public void testGetTripsPage() throws Exception {
-		Assert.assertTrue(false);
+		Page<Trip> page = tripResource.getTripsPage(
+			RandomTestUtil.randomString(), null, Pagination.of(1, 2), null);
+
+		Assert.assertEquals(0, page.getTotalCount());
+
+		Trip trip1 = testGetTripsPage_addTrip(randomTrip());
+
+		Trip trip2 = testGetTripsPage_addTrip(randomTrip());
+
+		page = tripResource.getTripsPage(null, null, Pagination.of(1, 2), null);
+
+		Assert.assertEquals(2, page.getTotalCount());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(trip1, trip2), (List<Trip>)page.getItems());
+		assertValid(page);
+
+		tripResource.deleteTrip(trip1.getId());
+
+		tripResource.deleteTrip(trip2.getId());
+	}
+
+	@Test
+	public void testGetTripsPageWithFilterDateTimeEquals() throws Exception {
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.DATE_TIME);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Trip trip1 = randomTrip();
+
+		trip1 = testGetTripsPage_addTrip(trip1);
+
+		for (EntityField entityField : entityFields) {
+			Page<Trip> page = tripResource.getTripsPage(
+				null, getFilterString(entityField, "between", trip1),
+				Pagination.of(1, 2), null);
+
+			assertEquals(
+				Collections.singletonList(trip1), (List<Trip>)page.getItems());
+		}
+	}
+
+	@Test
+	public void testGetTripsPageWithFilterStringEquals() throws Exception {
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.STRING);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Trip trip1 = testGetTripsPage_addTrip(randomTrip());
+
+		@SuppressWarnings("PMD.UnusedLocalVariable")
+		Trip trip2 = testGetTripsPage_addTrip(randomTrip());
+
+		for (EntityField entityField : entityFields) {
+			Page<Trip> page = tripResource.getTripsPage(
+				null, getFilterString(entityField, "eq", trip1),
+				Pagination.of(1, 2), null);
+
+			assertEquals(
+				Collections.singletonList(trip1), (List<Trip>)page.getItems());
+		}
+	}
+
+	@Test
+	public void testGetTripsPageWithPagination() throws Exception {
+		Trip trip1 = testGetTripsPage_addTrip(randomTrip());
+
+		Trip trip2 = testGetTripsPage_addTrip(randomTrip());
+
+		Trip trip3 = testGetTripsPage_addTrip(randomTrip());
+
+		Page<Trip> page1 = tripResource.getTripsPage(
+			null, null, Pagination.of(1, 2), null);
+
+		List<Trip> trips1 = (List<Trip>)page1.getItems();
+
+		Assert.assertEquals(trips1.toString(), 2, trips1.size());
+
+		Page<Trip> page2 = tripResource.getTripsPage(
+			null, null, Pagination.of(2, 2), null);
+
+		Assert.assertEquals(3, page2.getTotalCount());
+
+		List<Trip> trips2 = (List<Trip>)page2.getItems();
+
+		Assert.assertEquals(trips2.toString(), 1, trips2.size());
+
+		Page<Trip> page3 = tripResource.getTripsPage(
+			null, null, Pagination.of(1, 3), null);
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(trip1, trip2, trip3), (List<Trip>)page3.getItems());
+	}
+
+	@Test
+	public void testGetTripsPageWithSortDateTime() throws Exception {
+		testGetTripsPageWithSort(
+			EntityField.Type.DATE_TIME,
+			(entityField, trip1, trip2) -> {
+				BeanUtils.setProperty(
+					trip1, entityField.getName(),
+					DateUtils.addMinutes(new Date(), -2));
+			});
+	}
+
+	@Test
+	public void testGetTripsPageWithSortInteger() throws Exception {
+		testGetTripsPageWithSort(
+			EntityField.Type.INTEGER,
+			(entityField, trip1, trip2) -> {
+				BeanUtils.setProperty(trip1, entityField.getName(), 0);
+				BeanUtils.setProperty(trip2, entityField.getName(), 1);
+			});
+	}
+
+	@Test
+	public void testGetTripsPageWithSortString() throws Exception {
+		testGetTripsPageWithSort(
+			EntityField.Type.STRING,
+			(entityField, trip1, trip2) -> {
+				Class<?> clazz = trip1.getClass();
+
+				String entityFieldName = entityField.getName();
+
+				Method method = clazz.getMethod(
+					"get" + StringUtil.upperCaseFirstLetter(entityFieldName));
+
+				Class<?> returnType = method.getReturnType();
+
+				if (returnType.isAssignableFrom(Map.class)) {
+					BeanUtils.setProperty(
+						trip1, entityFieldName,
+						Collections.singletonMap("Aaa", "Aaa"));
+					BeanUtils.setProperty(
+						trip2, entityFieldName,
+						Collections.singletonMap("Bbb", "Bbb"));
+				}
+				else if (entityFieldName.contains("email")) {
+					BeanUtils.setProperty(
+						trip1, entityFieldName,
+						"aaa" +
+							StringUtil.toLowerCase(
+								RandomTestUtil.randomString()) +
+									"@liferay.com");
+					BeanUtils.setProperty(
+						trip2, entityFieldName,
+						"bbb" +
+							StringUtil.toLowerCase(
+								RandomTestUtil.randomString()) +
+									"@liferay.com");
+				}
+				else {
+					BeanUtils.setProperty(
+						trip1, entityFieldName,
+						"aaa" +
+							StringUtil.toLowerCase(
+								RandomTestUtil.randomString()));
+					BeanUtils.setProperty(
+						trip2, entityFieldName,
+						"bbb" +
+							StringUtil.toLowerCase(
+								RandomTestUtil.randomString()));
+				}
+			});
+	}
+
+	protected void testGetTripsPageWithSort(
+			EntityField.Type type,
+			UnsafeTriConsumer<EntityField, Trip, Trip, Exception>
+				unsafeTriConsumer)
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(type);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Trip trip1 = randomTrip();
+		Trip trip2 = randomTrip();
+
+		for (EntityField entityField : entityFields) {
+			unsafeTriConsumer.accept(entityField, trip1, trip2);
+		}
+
+		trip1 = testGetTripsPage_addTrip(trip1);
+
+		trip2 = testGetTripsPage_addTrip(trip2);
+
+		for (EntityField entityField : entityFields) {
+			Page<Trip> ascPage = tripResource.getTripsPage(
+				null, null, Pagination.of(1, 2),
+				entityField.getName() + ":asc");
+
+			assertEquals(
+				Arrays.asList(trip1, trip2), (List<Trip>)ascPage.getItems());
+
+			Page<Trip> descPage = tripResource.getTripsPage(
+				null, null, Pagination.of(1, 2),
+				entityField.getName() + ":desc");
+
+			assertEquals(
+				Arrays.asList(trip2, trip1), (List<Trip>)descPage.getItems());
+		}
+	}
+
+	protected Trip testGetTripsPage_addTrip(Trip trip) throws Exception {
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -194,6 +415,8 @@ public abstract class BaseTripResourceTestCase {
 			"trips",
 			new HashMap<String, Object>() {
 				{
+					put("page", 1);
+					put("pageSize", 2);
 				}
 			},
 			new GraphQLField("items", getGraphQLFields()),
@@ -368,6 +591,9 @@ public abstract class BaseTripResourceTestCase {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
+
+	@Rule
+	public SearchTestRule searchTestRule = new SearchTestRule();
 
 	protected Trip testGraphQLTrip_addTrip() throws Exception {
 		throw new UnsupportedOperationException(

@@ -1,7 +1,10 @@
 package com.liferay.travels.rest.resource.v1_0;
 
+import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.vulcan.accept.language.AcceptLanguage;
 import com.liferay.portal.vulcan.pagination.Page;
+import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.travels.rest.dto.v1_0.Trip;
 
 import java.util.Locale;
@@ -31,7 +34,9 @@ public interface TripResource {
 		return FactoryHolder.factory.create();
 	}
 
-	public Page<Trip> getTripsPage() throws Exception;
+	public Page<Trip> getTripsPage(
+			String search, Filter filter, Pagination pagination, Sort[] sorts)
+		throws Exception;
 
 	public Trip postTrip(Trip trip) throws Exception;
 

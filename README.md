@@ -52,3 +52,9 @@ The steps are:
 - Create a new module with blade `blade create -t rest-builder -p com.liferay.travels.rest liferay-travels-rest`
 - Define our API with the OpenAPI YAML file and the config YAML file and execute the REST Builder
 - Implement the resource endpoints in the ResourceImpl classes
+
+## Step 5: Add filter, pagination, search and sort to Trips
+We make use of the APIs infrastructure and, in concrete, of SearchUtil class to provide filter, pargination, search and sort to the endpoint getting all trips
+
+The steps are:
+- Modify the OpenAPI with new path parameters and run REST Builder 

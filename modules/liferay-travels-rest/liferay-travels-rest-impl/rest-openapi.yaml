@@ -70,6 +70,27 @@ paths:
     "/trips":
         get:
             operationId: getTripsPage
+            parameters:
+                - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                - in: query
+                  name: sort
+                  schema:
+                      type: string
             responses:
                 200:
                     content:
