@@ -1,0 +1,3 @@
+Bundle-Name: liferay-travels-rest-client
+Bundle-SymbolicName: com.liferay.travels.rest.client
+Bundle-Version: 1.0.0

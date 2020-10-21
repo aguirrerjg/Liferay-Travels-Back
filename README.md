@@ -44,3 +44,11 @@ The steps to follow are:
 - Create a new module with blade `blade create -t service -s com.liferay.portal.vulcan.graphql.contributor.GraphQLContributor -p com.liferay.useraccount.extension user-account-extension`
 - Implement the GraphQLContributor interface implementing a query contributor with the help of the @GraphQLTypeExtension annotation and GraphQLField
 - Improve your GraphQLContributor connecting getting the information form a real external API.
+
+## Step 4: Create custom API:
+In this step we will create a custom API for our Travel application, with Trips and Stages.
+
+The steps are:
+- Create a new module with blade `blade create -t rest-builder -p com.liferay.travels.rest liferay-travels-rest`
+- Define our API with the OpenAPI YAML file and the config YAML file and execute the REST Builder
+

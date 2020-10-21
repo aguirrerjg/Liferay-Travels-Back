@@ -1,0 +1,6 @@
+Bundle-Name: Liferay Travels REST API
+Bundle-SymbolicName: com.liferay.travels.rest.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.liferay.travels.rest.dto.v1_0,\
+	com.liferay.travels.rest.resource.v1_0

@@ -1,0 +1,10 @@
+apiDir: "../liferay-travels-rest-api/src/main/java"
+apiPackagePath: "com.liferay.travels.rest"
+application:
+    baseURI: "/liferay-travels-rest"
+    className: "LiferayTravelsRestApplication"
+    name: "Liferay.Travels.Rest.API"
+author: "Javier de Arcos"
+clientDir: "../liferay-travels-rest-client/src/main/java"
+testDir: "../liferay-travels-rest-test/src/testIntegration/java"
+generateBatch: false

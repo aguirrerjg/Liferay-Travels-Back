@@ -1,0 +1,301 @@
+components:
+    schemas:
+        Stage:
+            description:
+                "A stage with some planned action, as a lunch, cultural tour or activity"
+            properties:
+                id:
+                    description: "Stage identifier"
+                    format: int64
+                    readOnly: true
+                    type: integer
+                name:
+                    description: "Name of the stage"
+                    type: string
+                description:
+                    description: "Description of the stage"
+                    type: string
+                place:
+                    description: "Place where the stage takes place"
+                    type: string
+                image:
+                    description: "Descriptive image of the stage in Base64"
+                    type: string
+            required:
+                - name
+                - description
+                - place
+        Trip:
+            description:
+                "A trip is defined by a name, starting date and set of stages"
+            properties:
+                id:
+                    description: "Trip identifier"
+                    format: int64
+                    readOnly: true
+                    type: integer
+                name:
+                    description: "Name of the trip. Usually it denotes its purpose"
+                    type: string
+                description:
+                    description: "Description of the trip"
+                    type: string
+                starting-date:
+                    description: "Starting date of the trip"
+                    format: date-time
+                    type: string
+                image:
+                    description: "Descriptive image of the trip in Base64"
+                    type: string
+                stages:
+                    description: "Stages of the trip"
+                    items:
+                        $ref: "#/components/schemas/Stage"
+                    type: array
+            required:
+                - name
+                - starting-date
+            type: object
+info:
+    description:
+        "Liferay application to organize the next team trip!. A Java client JAR is available for use with the group ID
+        'com.liferay', artifact ID 'com.liferay.travels.rest.client', and version '1.0.0'."
+    license:
+        name: "Apache 2.0"
+        url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+    title: "Liferay Travel REST API"
+    version: v1.0
+openapi: 3.0.1
+paths:
+    "/trips":
+        get:
+            operationId: getTripsPage
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Trip"
+                                type: array
+                        application/xml:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Trip"
+                                type: array
+                    description:
+                        "Returns the collection of all planned trips"
+            tags: ["Trip"]
+        post:
+            operationId: postTrip
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Trip"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/Trip"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Trip"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/Trip"
+                    description:
+                        "Returns the created trip"
+            tags: ["Trip"]
+    "/trips/{tripId}":
+        get:
+            operationId: getTrip
+            parameters:
+                - in: path
+                  name: tripId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Trip"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/Trip"
+                    description:
+                        "Returns the trip with the given identifier"
+            tags: ["Trip"]
+        put:
+            operationId: putTrip
+            parameters:
+                - in: path
+                  name: tripId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Trip"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/Trip"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Trip"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/Trip"
+                    description:
+                        "Replace the trip with the given identifier"
+            tags: ["Trip"]
+        delete:
+            operationId: deleteTrip
+            parameters:
+                - in: path
+                  name: tripId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            responses:
+                204:
+                    content:
+                        application/json: {}
+                        application/xml: {}
+                    description:
+                        "Trip successfully deleted. No content"
+            tags: ["Trip"]
+    "/trips/{tripId}/stages":
+        get:
+            operationId: getTripStagesPage
+            parameters:
+                - in: path
+                  name: tripId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Stage"
+                                type: array
+                        application/xml:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Stage"
+                                type: array
+                    description:
+                        "Returns the collection of Stages of the trip with the given identifier"
+            tags: ["Stage"]
+        post:
+            operationId: postTripStage
+            parameters:
+                - in: path
+                  name: tripId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Stage"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/Stage"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Stage"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/Stage"
+                    description:
+                        "Returns the created Stage"
+            tags: ["Stage"]
+    "/stages/{stageId}":
+        get:
+            operationId: getStage
+            parameters:
+                - in: path
+                  name: stageId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Stage"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/Stage"
+                    description:
+                        "Returns the Stage with the given identifier"
+            tags: ["Stage"]
+        delete:
+            operationId: deleteStage
+            parameters:
+                - in: path
+                  name: stageId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            responses:
+                204:
+                    content:
+                        application/json: {}
+                        application/xml: {}
+                    description:
+                        "Stage successfully deleted. No content"
+            tags: ["Stage"]
+        put:
+            operationId: putStage
+            parameters:
+                - in: path
+                  name: stageId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Stage"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/Stage"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Stage"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/Stage"
+                    description:
+                        "Replace the stage with the given identifier"
+            tags: ["Stage"]
