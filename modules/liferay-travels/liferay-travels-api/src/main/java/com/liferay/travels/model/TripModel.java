@@ -16,6 +16,9 @@ package com.liferay.travels.model;
 
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.model.BaseModel;
+import com.liferay.portal.kernel.model.GroupedModel;
+import com.liferay.portal.kernel.model.ShardedModel;
+import com.liferay.portal.kernel.model.StagedAuditedModel;
 
 import java.util.Date;
 
@@ -33,7 +36,8 @@ import org.osgi.annotation.versioning.ProviderType;
  * @generated
  */
 @ProviderType
-public interface TripModel extends BaseModel<Trip> {
+public interface TripModel
+	extends BaseModel<Trip>, GroupedModel, ShardedModel, StagedAuditedModel {
 
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -61,6 +65,7 @@ public interface TripModel extends BaseModel<Trip> {
 	 * @return the uuid of this trip
 	 */
 	@AutoEscape
+	@Override
 	public String getUuid();
 
 	/**
@@ -68,6 +73,7 @@ public interface TripModel extends BaseModel<Trip> {
 	 *
 	 * @param uuid the uuid of this trip
 	 */
+	@Override
 	public void setUuid(String uuid);
 
 	/**
@@ -142,5 +148,118 @@ public interface TripModel extends BaseModel<Trip> {
 	 * @param image the image of this trip
 	 */
 	public void setImage(String image);
+
+	/**
+	 * Returns the group ID of this trip.
+	 *
+	 * @return the group ID of this trip
+	 */
+	@Override
+	public long getGroupId();
+
+	/**
+	 * Sets the group ID of this trip.
+	 *
+	 * @param groupId the group ID of this trip
+	 */
+	@Override
+	public void setGroupId(long groupId);
+
+	/**
+	 * Returns the user ID of this trip.
+	 *
+	 * @return the user ID of this trip
+	 */
+	@Override
+	public long getUserId();
+
+	/**
+	 * Sets the user ID of this trip.
+	 *
+	 * @param userId the user ID of this trip
+	 */
+	@Override
+	public void setUserId(long userId);
+
+	/**
+	 * Returns the user uuid of this trip.
+	 *
+	 * @return the user uuid of this trip
+	 */
+	@Override
+	public String getUserUuid();
+
+	/**
+	 * Sets the user uuid of this trip.
+	 *
+	 * @param userUuid the user uuid of this trip
+	 */
+	@Override
+	public void setUserUuid(String userUuid);
+
+	/**
+	 * Returns the user name of this trip.
+	 *
+	 * @return the user name of this trip
+	 */
+	@AutoEscape
+	@Override
+	public String getUserName();
+
+	/**
+	 * Sets the user name of this trip.
+	 *
+	 * @param userName the user name of this trip
+	 */
+	@Override
+	public void setUserName(String userName);
+
+	/**
+	 * Returns the company ID of this trip.
+	 *
+	 * @return the company ID of this trip
+	 */
+	@Override
+	public long getCompanyId();
+
+	/**
+	 * Sets the company ID of this trip.
+	 *
+	 * @param companyId the company ID of this trip
+	 */
+	@Override
+	public void setCompanyId(long companyId);
+
+	/**
+	 * Returns the create date of this trip.
+	 *
+	 * @return the create date of this trip
+	 */
+	@Override
+	public Date getCreateDate();
+
+	/**
+	 * Sets the create date of this trip.
+	 *
+	 * @param createDate the create date of this trip
+	 */
+	@Override
+	public void setCreateDate(Date createDate);
+
+	/**
+	 * Returns the modified date of this trip.
+	 *
+	 * @return the modified date of this trip
+	 */
+	@Override
+	public Date getModifiedDate();
+
+	/**
+	 * Sets the modified date of this trip.
+	 *
+	 * @param modifiedDate the modified date of this trip
+	 */
+	@Override
+	public void setModifiedDate(Date modifiedDate);
 
 }

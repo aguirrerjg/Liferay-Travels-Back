@@ -51,118 +51,18 @@ import com.liferay.travels.service.TripServiceUtil;
  */
 public class TripServiceHttp {
 
-	public static java.util.List<com.liferay.travels.model.Trip> getTrips(
-		HttpPrincipal httpPrincipal) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				TripServiceUtil.class, "getTrips", _getTripsParameterTypes0);
-
-			MethodHandler methodHandler = new MethodHandler(methodKey);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (java.util.List<com.liferay.travels.model.Trip>)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
-	public static com.liferay.travels.model.Trip getTrip(
-			HttpPrincipal httpPrincipal, long tripId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				TripServiceUtil.class, "getTrip", _getTripParameterTypes1);
-
-			MethodHandler methodHandler = new MethodHandler(methodKey, tripId);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				if (exception instanceof
-						com.liferay.portal.kernel.exception.PortalException) {
-
-					throw (com.liferay.portal.kernel.exception.PortalException)
-						exception;
-				}
-
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (com.liferay.travels.model.Trip)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
 	public static com.liferay.travels.model.Trip addTrip(
-		HttpPrincipal httpPrincipal, String name, String description,
-		java.util.Date startingDate, String image) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				TripServiceUtil.class, "addTrip", _addTripParameterTypes2);
-
-			MethodHandler methodHandler = new MethodHandler(
-				methodKey, name, description, startingDate, image);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (com.liferay.travels.model.Trip)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
-	public static com.liferay.travels.model.Trip updateTrip(
-			HttpPrincipal httpPrincipal, long tripId, String name,
+			HttpPrincipal httpPrincipal, long groupId, long userId, String name,
 			String description, java.util.Date startingDate, String image)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				TripServiceUtil.class, "updateTrip",
-				_updateTripParameterTypes3);
+				TripServiceUtil.class, "addTrip", _addTripParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, tripId, name, description, startingDate, image);
+				methodKey, groupId, userId, name, description, startingDate,
+				image);
 
 			Object returnObj = null;
 
@@ -199,7 +99,7 @@ public class TripServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				TripServiceUtil.class, "deleteTrip",
-				_deleteTripParameterTypes4);
+				_deleteTripParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, tripId);
 
@@ -231,21 +131,133 @@ public class TripServiceHttp {
 		}
 	}
 
+	public static com.liferay.travels.model.Trip getTrip(
+			HttpPrincipal httpPrincipal, long tripId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				TripServiceUtil.class, "getTrip", _getTripParameterTypes2);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, tripId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				if (exception instanceof
+						com.liferay.portal.kernel.exception.PortalException) {
+
+					throw (com.liferay.portal.kernel.exception.PortalException)
+						exception;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (com.liferay.travels.model.Trip)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static java.util.List<com.liferay.travels.model.Trip> getTrips(
+		HttpPrincipal httpPrincipal) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				TripServiceUtil.class, "getTrips", _getTripsParameterTypes3);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (java.util.List<com.liferay.travels.model.Trip>)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static com.liferay.travels.model.Trip updateTrip(
+			HttpPrincipal httpPrincipal, long groupId, long userId, long tripId,
+			String name, String description, java.util.Date startingDate,
+			String image)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				TripServiceUtil.class, "updateTrip",
+				_updateTripParameterTypes4);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, groupId, userId, tripId, name, description,
+				startingDate, image);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				if (exception instanceof
+						com.liferay.portal.kernel.exception.PortalException) {
+
+					throw (com.liferay.portal.kernel.exception.PortalException)
+						exception;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (com.liferay.travels.model.Trip)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(TripServiceHttp.class);
 
-	private static final Class<?>[] _getTripsParameterTypes0 = new Class[] {};
-	private static final Class<?>[] _getTripParameterTypes1 = new Class[] {
+	private static final Class<?>[] _addTripParameterTypes0 = new Class[] {
+		long.class, long.class, String.class, String.class,
+		java.util.Date.class, String.class
+	};
+	private static final Class<?>[] _deleteTripParameterTypes1 = new Class[] {
 		long.class
 	};
-	private static final Class<?>[] _addTripParameterTypes2 = new Class[] {
-		String.class, String.class, java.util.Date.class, String.class
-	};
-	private static final Class<?>[] _updateTripParameterTypes3 = new Class[] {
-		long.class, String.class, String.class, java.util.Date.class,
-		String.class
-	};
-	private static final Class<?>[] _deleteTripParameterTypes4 = new Class[] {
+	private static final Class<?>[] _getTripParameterTypes2 = new Class[] {
 		long.class
+	};
+	private static final Class<?>[] _getTripsParameterTypes3 = new Class[] {};
+	private static final Class<?>[] _updateTripParameterTypes4 = new Class[] {
+		long.class, long.class, long.class, String.class, String.class,
+		java.util.Date.class, String.class
 	};
 
 }

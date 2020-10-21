@@ -14,6 +14,11 @@
 
 package com.liferay.travels.service.base;
 
+import com.liferay.exportimport.kernel.lar.ExportImportHelperUtil;
+import com.liferay.exportimport.kernel.lar.ManifestSummary;
+import com.liferay.exportimport.kernel.lar.PortletDataContext;
+import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
@@ -23,6 +28,7 @@ import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DefaultActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -225,6 +231,18 @@ public abstract class StageLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the stage matching the UUID and group.
+	 *
+	 * @param uuid the stage's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching stage, or <code>null</code> if a matching stage could not be found
+	 */
+	@Override
+	public Stage fetchStageByUuidAndGroupId(String uuid, long groupId) {
+		return stagePersistence.fetchByUUID_G(uuid, groupId);
+	}
+
+	/**
 	 * Returns the stage with the primary key.
 	 *
 	 * @param stageId the primary key of the stage
@@ -276,6 +294,70 @@ public abstract class StageLocalServiceBaseImpl
 		actionableDynamicQuery.setPrimaryKeyPropertyName("stageId");
 	}
 
+	@Override
+	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
+		final PortletDataContext portletDataContext) {
+
+		final ExportActionableDynamicQuery exportActionableDynamicQuery =
+			new ExportActionableDynamicQuery() {
+
+				@Override
+				public long performCount() throws PortalException {
+					ManifestSummary manifestSummary =
+						portletDataContext.getManifestSummary();
+
+					StagedModelType stagedModelType = getStagedModelType();
+
+					long modelAdditionCount = super.performCount();
+
+					manifestSummary.addModelAdditionCount(
+						stagedModelType, modelAdditionCount);
+
+					long modelDeletionCount =
+						ExportImportHelperUtil.getModelDeletionCount(
+							portletDataContext, stagedModelType);
+
+					manifestSummary.addModelDeletionCount(
+						stagedModelType, modelDeletionCount);
+
+					return modelAdditionCount;
+				}
+
+			};
+
+		initActionableDynamicQuery(exportActionableDynamicQuery);
+
+		exportActionableDynamicQuery.setAddCriteriaMethod(
+			new ActionableDynamicQuery.AddCriteriaMethod() {
+
+				@Override
+				public void addCriteria(DynamicQuery dynamicQuery) {
+					portletDataContext.addDateRangeCriteria(
+						dynamicQuery, "modifiedDate");
+				}
+
+			});
+
+		exportActionableDynamicQuery.setCompanyId(
+			portletDataContext.getCompanyId());
+
+		exportActionableDynamicQuery.setPerformActionMethod(
+			new ActionableDynamicQuery.PerformActionMethod<Stage>() {
+
+				@Override
+				public void performAction(Stage stage) throws PortalException {
+					StagedModelDataHandlerUtil.exportStagedModel(
+						portletDataContext, stage);
+				}
+
+			});
+		exportActionableDynamicQuery.setStagedModelType(
+			new StagedModelType(
+				PortalUtil.getClassNameId(Stage.class.getName())));
+
+		return exportActionableDynamicQuery;
+	}
+
 	/**
 	 * @throws PortalException
 	 */
@@ -307,6 +389,54 @@ public abstract class StageLocalServiceBaseImpl
 		throws PortalException {
 
 		return stagePersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	/**
+	 * Returns all the stages matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the stages
+	 * @param companyId the primary key of the company
+	 * @return the matching stages, or an empty list if no matches were found
+	 */
+	@Override
+	public List<Stage> getStagesByUuidAndCompanyId(
+		String uuid, long companyId) {
+
+		return stagePersistence.findByUuid_C(uuid, companyId);
+	}
+
+	/**
+	 * Returns a range of stages matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the stages
+	 * @param companyId the primary key of the company
+	 * @param start the lower bound of the range of stages
+	 * @param end the upper bound of the range of stages (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the range of matching stages, or an empty list if no matches were found
+	 */
+	@Override
+	public List<Stage> getStagesByUuidAndCompanyId(
+		String uuid, long companyId, int start, int end,
+		OrderByComparator<Stage> orderByComparator) {
+
+		return stagePersistence.findByUuid_C(
+			uuid, companyId, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns the stage matching the UUID and group.
+	 *
+	 * @param uuid the stage's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching stage
+	 * @throws PortalException if a matching stage could not be found
+	 */
+	@Override
+	public Stage getStageByUuidAndGroupId(String uuid, long groupId)
+		throws PortalException {
+
+		return stagePersistence.findByUUID_G(uuid, groupId);
 	}
 
 	/**
@@ -423,11 +553,19 @@ public abstract class StageLocalServiceBaseImpl
 		classNameLocalService;
 
 	@Reference
+	protected com.liferay.portal.kernel.service.GroupLocalService
+		groupLocalService;
+
+	@Reference
 	protected com.liferay.portal.kernel.service.ResourceLocalService
 		resourceLocalService;
 
 	@Reference
 	protected com.liferay.portal.kernel.service.UserLocalService
 		userLocalService;
+
+	@Reference
+	protected com.liferay.asset.kernel.service.AssetEntryLocalService
+		assetEntryLocalService;
 
 }

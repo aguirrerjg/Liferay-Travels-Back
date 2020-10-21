@@ -32,11 +32,12 @@ public class StageLocalServiceWrapper
 
 	@Override
 	public com.liferay.travels.model.Stage addStage(
-		long tripId, String name, String description, String place,
-		String image) {
+			long groupId, long userId, long tripId, String name,
+			String description, String place, String image)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _stageLocalService.addStage(
-			tripId, name, description, place, image);
+			groupId, userId, tripId, name, description, place, image);
 	}
 
 	/**
@@ -218,11 +219,35 @@ public class StageLocalServiceWrapper
 		return _stageLocalService.fetchStage(stageId);
 	}
 
+	/**
+	 * Returns the stage matching the UUID and group.
+	 *
+	 * @param uuid the stage's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching stage, or <code>null</code> if a matching stage could not be found
+	 */
+	@Override
+	public com.liferay.travels.model.Stage fetchStageByUuidAndGroupId(
+		String uuid, long groupId) {
+
+		return _stageLocalService.fetchStageByUuidAndGroupId(uuid, groupId);
+	}
+
 	@Override
 	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
 
 		return _stageLocalService.getActionableDynamicQuery();
+	}
+
+	@Override
+	public com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery
+		getExportActionableDynamicQuery(
+			com.liferay.exportimport.kernel.lar.PortletDataContext
+				portletDataContext) {
+
+		return _stageLocalService.getExportActionableDynamicQuery(
+			portletDataContext);
 	}
 
 	@Override
@@ -268,6 +293,22 @@ public class StageLocalServiceWrapper
 	}
 
 	/**
+	 * Returns the stage matching the UUID and group.
+	 *
+	 * @param uuid the stage's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching stage
+	 * @throws PortalException if a matching stage could not be found
+	 */
+	@Override
+	public com.liferay.travels.model.Stage getStageByUuidAndGroupId(
+			String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _stageLocalService.getStageByUuidAndGroupId(uuid, groupId);
+	}
+
+	/**
 	 * Returns a range of all the stages.
 	 *
 	 * <p>
@@ -290,6 +331,41 @@ public class StageLocalServiceWrapper
 		long tripId) {
 
 		return _stageLocalService.getStages(tripId);
+	}
+
+	/**
+	 * Returns all the stages matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the stages
+	 * @param companyId the primary key of the company
+	 * @return the matching stages, or an empty list if no matches were found
+	 */
+	@Override
+	public java.util.List<com.liferay.travels.model.Stage>
+		getStagesByUuidAndCompanyId(String uuid, long companyId) {
+
+		return _stageLocalService.getStagesByUuidAndCompanyId(uuid, companyId);
+	}
+
+	/**
+	 * Returns a range of stages matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the stages
+	 * @param companyId the primary key of the company
+	 * @param start the lower bound of the range of stages
+	 * @param end the upper bound of the range of stages (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the range of matching stages, or an empty list if no matches were found
+	 */
+	@Override
+	public java.util.List<com.liferay.travels.model.Stage>
+		getStagesByUuidAndCompanyId(
+			String uuid, long companyId, int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<com.liferay.travels.model.Stage> orderByComparator) {
+
+		return _stageLocalService.getStagesByUuidAndCompanyId(
+			uuid, companyId, start, end, orderByComparator);
 	}
 
 	/**

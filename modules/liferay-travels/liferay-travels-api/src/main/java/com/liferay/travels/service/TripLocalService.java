@@ -14,8 +14,10 @@
 
 package com.liferay.travels.service;
 
+import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -61,8 +63,11 @@ public interface TripLocalService
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.liferay.travels.service.impl.TripLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the trip local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link TripLocalServiceUtil} if injection and service tracking are not available.
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public Trip addTrip(
-		String name, String description, Date startingDate, String image);
+			long groupId, long userId, String name, String description,
+			Date startingDate, String image)
+		throws PortalException;
 
 	/**
 	 * Adds the trip to the database. Also notifies the appropriate model listeners.
@@ -195,8 +200,22 @@ public interface TripLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Trip fetchTrip(long tripId);
 
+	/**
+	 * Returns the trip matching the UUID and group.
+	 *
+	 * @param uuid the trip's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching trip, or <code>null</code> if a matching trip could not be found
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Trip fetchTripByUuidAndGroupId(String uuid, long groupId);
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
+		PortletDataContext portletDataContext);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
@@ -226,6 +245,18 @@ public interface TripLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Trip getTrip(long tripId) throws PortalException;
 
+	/**
+	 * Returns the trip matching the UUID and group.
+	 *
+	 * @param uuid the trip's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching trip
+	 * @throws PortalException if a matching trip could not be found
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Trip getTripByUuidAndGroupId(String uuid, long groupId)
+		throws PortalException;
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Trip> getTrips();
 
@@ -244,6 +275,31 @@ public interface TripLocalService
 	public List<Trip> getTrips(int start, int end);
 
 	/**
+	 * Returns all the trips matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the trips
+	 * @param companyId the primary key of the company
+	 * @return the matching trips, or an empty list if no matches were found
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Trip> getTripsByUuidAndCompanyId(String uuid, long companyId);
+
+	/**
+	 * Returns a range of trips matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the trips
+	 * @param companyId the primary key of the company
+	 * @param start the lower bound of the range of trips
+	 * @param end the upper bound of the range of trips (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the range of matching trips, or an empty list if no matches were found
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Trip> getTripsByUuidAndCompanyId(
+		String uuid, long companyId, int start, int end,
+		OrderByComparator<Trip> orderByComparator);
+
+	/**
 	 * Returns the number of trips.
 	 *
 	 * @return the number of trips
@@ -251,9 +307,10 @@ public interface TripLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getTripsCount();
 
+	@Indexable(type = IndexableType.REINDEX)
 	public Trip updateTrip(
-			long tripId, String name, String description, Date startingDate,
-			String image)
+			long groupId, long userId, long tripId, String name,
+			String description, Date startingDate, String image)
 		throws PortalException;
 
 	/**

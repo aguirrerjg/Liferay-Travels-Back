@@ -63,14 +63,33 @@ import java.rmi.RemoteException;
 @Deprecated
 public class TripServiceSoap {
 
-	public static com.liferay.travels.model.TripSoap[] getTrips()
+	public static com.liferay.travels.model.TripSoap addTrip(
+			long groupId, long userId, String name, String description,
+			java.util.Date startingDate, String image)
 		throws RemoteException {
 
 		try {
-			java.util.List<com.liferay.travels.model.Trip> returnValue =
-				TripServiceUtil.getTrips();
+			com.liferay.travels.model.Trip returnValue =
+				TripServiceUtil.addTrip(
+					groupId, userId, name, description, startingDate, image);
 
-			return com.liferay.travels.model.TripSoap.toSoapModels(returnValue);
+			return com.liferay.travels.model.TripSoap.toSoapModel(returnValue);
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static com.liferay.travels.model.TripSoap deleteTrip(long tripId)
+		throws RemoteException {
+
+		try {
+			com.liferay.travels.model.Trip returnValue =
+				TripServiceUtil.deleteTrip(tripId);
+
+			return com.liferay.travels.model.TripSoap.toSoapModel(returnValue);
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -95,16 +114,14 @@ public class TripServiceSoap {
 		}
 	}
 
-	public static com.liferay.travels.model.TripSoap addTrip(
-			String name, String description, java.util.Date startingDate,
-			String image)
+	public static com.liferay.travels.model.TripSoap[] getTrips()
 		throws RemoteException {
 
 		try {
-			com.liferay.travels.model.Trip returnValue =
-				TripServiceUtil.addTrip(name, description, startingDate, image);
+			java.util.List<com.liferay.travels.model.Trip> returnValue =
+				TripServiceUtil.getTrips();
 
-			return com.liferay.travels.model.TripSoap.toSoapModel(returnValue);
+			return com.liferay.travels.model.TripSoap.toSoapModels(returnValue);
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -114,30 +131,15 @@ public class TripServiceSoap {
 	}
 
 	public static com.liferay.travels.model.TripSoap updateTrip(
-			long tripId, String name, String description,
-			java.util.Date startingDate, String image)
+			long groupId, long userId, long tripId, String name,
+			String description, java.util.Date startingDate, String image)
 		throws RemoteException {
 
 		try {
 			com.liferay.travels.model.Trip returnValue =
 				TripServiceUtil.updateTrip(
-					tripId, name, description, startingDate, image);
-
-			return com.liferay.travels.model.TripSoap.toSoapModel(returnValue);
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	public static com.liferay.travels.model.TripSoap deleteTrip(long tripId)
-		throws RemoteException {
-
-		try {
-			com.liferay.travels.model.Trip returnValue =
-				TripServiceUtil.deleteTrip(tripId);
+					groupId, userId, tripId, name, description, startingDate,
+					image);
 
 			return com.liferay.travels.model.TripSoap.toSoapModel(returnValue);
 		}

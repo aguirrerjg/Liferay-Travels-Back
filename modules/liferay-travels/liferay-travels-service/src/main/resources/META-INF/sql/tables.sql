@@ -4,8 +4,14 @@ create table LiferayTravels_Stage (
 	name VARCHAR(75) null,
 	description VARCHAR(75) null,
 	place VARCHAR(75) null,
-	image VARCHAR(75) null,
-	tripId LONG
+	image TEXT null,
+	tripId LONG,
+	groupId LONG,
+	userId LONG,
+	userName VARCHAR(75) null,
+	companyId LONG,
+	createDate DATE null,
+	modifiedDate DATE null
 );
 
 create table LiferayTravels_Trip (
@@ -14,5 +20,11 @@ create table LiferayTravels_Trip (
 	name VARCHAR(75) null,
 	description VARCHAR(75) null,
 	startingDate DATE null,
-	image VARCHAR(75) null
+	image TEXT null,
+	groupId LONG,
+	userId LONG,
+	userName VARCHAR(75) null,
+	companyId LONG,
+	createDate DATE null,
+	modifiedDate DATE null
 );

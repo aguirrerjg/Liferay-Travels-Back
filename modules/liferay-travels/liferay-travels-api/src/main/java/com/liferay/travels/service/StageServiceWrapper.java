@@ -32,10 +32,12 @@ public class StageServiceWrapper
 
 	@Override
 	public com.liferay.travels.model.Stage addStage(
-		long tripId, String name, String description, String place,
-		String image) {
+			long groupId, long userId, long tripId, String name,
+			String description, String place, String image)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _stageService.addStage(tripId, name, description, place, image);
+		return _stageService.addStage(
+			groupId, userId, tripId, name, description, place, image);
 	}
 
 	@Override
@@ -64,7 +66,8 @@ public class StageServiceWrapper
 
 	@Override
 	public java.util.List<com.liferay.travels.model.Stage> getStages(
-		long tripId) {
+			long tripId)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _stageService.getStages(tripId);
 	}

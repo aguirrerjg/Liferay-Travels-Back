@@ -17,6 +17,7 @@ package com.liferay.travels.model;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,6 +40,12 @@ public class StageSoap implements Serializable {
 		soapModel.setPlace(model.getPlace());
 		soapModel.setImage(model.getImage());
 		soapModel.setTripId(model.getTripId());
+		soapModel.setGroupId(model.getGroupId());
+		soapModel.setUserId(model.getUserId());
+		soapModel.setUserName(model.getUserName());
+		soapModel.setCompanyId(model.getCompanyId());
+		soapModel.setCreateDate(model.getCreateDate());
+		soapModel.setModifiedDate(model.getModifiedDate());
 
 		return soapModel;
 	}
@@ -147,6 +154,54 @@ public class StageSoap implements Serializable {
 		_tripId = tripId;
 	}
 
+	public long getGroupId() {
+		return _groupId;
+	}
+
+	public void setGroupId(long groupId) {
+		_groupId = groupId;
+	}
+
+	public long getUserId() {
+		return _userId;
+	}
+
+	public void setUserId(long userId) {
+		_userId = userId;
+	}
+
+	public String getUserName() {
+		return _userName;
+	}
+
+	public void setUserName(String userName) {
+		_userName = userName;
+	}
+
+	public long getCompanyId() {
+		return _companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		_companyId = companyId;
+	}
+
+	public Date getCreateDate() {
+		return _createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		_createDate = createDate;
+	}
+
+	public Date getModifiedDate() {
+		return _modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		_modifiedDate = modifiedDate;
+	}
+
 	private String _uuid;
 	private long _stageId;
 	private String _name;
@@ -154,5 +209,11 @@ public class StageSoap implements Serializable {
 	private String _place;
 	private String _image;
 	private long _tripId;
+	private long _groupId;
+	private long _userId;
+	private String _userName;
+	private long _companyId;
+	private Date _createDate;
+	private Date _modifiedDate;
 
 }

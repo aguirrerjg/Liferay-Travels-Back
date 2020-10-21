@@ -60,7 +60,7 @@ public class TripCacheModel implements CacheModel<Trip>, Externalizable {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(13);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -74,6 +74,18 @@ public class TripCacheModel implements CacheModel<Trip>, Externalizable {
 		sb.append(startingDate);
 		sb.append(", image=");
 		sb.append(image);
+		sb.append(", groupId=");
+		sb.append(groupId);
+		sb.append(", userId=");
+		sb.append(userId);
+		sb.append(", userName=");
+		sb.append(userName);
+		sb.append(", companyId=");
+		sb.append(companyId);
+		sb.append(", createDate=");
+		sb.append(createDate);
+		sb.append(", modifiedDate=");
+		sb.append(modifiedDate);
 		sb.append("}");
 
 		return sb.toString();
@@ -120,6 +132,32 @@ public class TripCacheModel implements CacheModel<Trip>, Externalizable {
 			tripImpl.setImage(image);
 		}
 
+		tripImpl.setGroupId(groupId);
+		tripImpl.setUserId(userId);
+
+		if (userName == null) {
+			tripImpl.setUserName("");
+		}
+		else {
+			tripImpl.setUserName(userName);
+		}
+
+		tripImpl.setCompanyId(companyId);
+
+		if (createDate == Long.MIN_VALUE) {
+			tripImpl.setCreateDate(null);
+		}
+		else {
+			tripImpl.setCreateDate(new Date(createDate));
+		}
+
+		if (modifiedDate == Long.MIN_VALUE) {
+			tripImpl.setModifiedDate(null);
+		}
+		else {
+			tripImpl.setModifiedDate(new Date(modifiedDate));
+		}
+
 		tripImpl.resetOriginalValues();
 
 		return tripImpl;
@@ -134,6 +172,15 @@ public class TripCacheModel implements CacheModel<Trip>, Externalizable {
 		description = objectInput.readUTF();
 		startingDate = objectInput.readLong();
 		image = objectInput.readUTF();
+
+		groupId = objectInput.readLong();
+
+		userId = objectInput.readLong();
+		userName = objectInput.readUTF();
+
+		companyId = objectInput.readLong();
+		createDate = objectInput.readLong();
+		modifiedDate = objectInput.readLong();
 	}
 
 	@Override
@@ -169,6 +216,21 @@ public class TripCacheModel implements CacheModel<Trip>, Externalizable {
 		else {
 			objectOutput.writeUTF(image);
 		}
+
+		objectOutput.writeLong(groupId);
+
+		objectOutput.writeLong(userId);
+
+		if (userName == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(userName);
+		}
+
+		objectOutput.writeLong(companyId);
+		objectOutput.writeLong(createDate);
+		objectOutput.writeLong(modifiedDate);
 	}
 
 	public String uuid;
@@ -177,5 +239,11 @@ public class TripCacheModel implements CacheModel<Trip>, Externalizable {
 	public String description;
 	public long startingDate;
 	public String image;
+	public long groupId;
+	public long userId;
+	public String userName;
+	public long companyId;
+	public long createDate;
+	public long modifiedDate;
 
 }

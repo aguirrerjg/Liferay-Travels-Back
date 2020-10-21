@@ -32,11 +32,12 @@ public class TripLocalServiceWrapper
 
 	@Override
 	public com.liferay.travels.model.Trip addTrip(
-		String name, String description, java.util.Date startingDate,
-		String image) {
+			long groupId, long userId, String name, String description,
+			java.util.Date startingDate, String image)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _tripLocalService.addTrip(
-			name, description, startingDate, image);
+			groupId, userId, name, description, startingDate, image);
 	}
 
 	/**
@@ -218,11 +219,35 @@ public class TripLocalServiceWrapper
 		return _tripLocalService.fetchTrip(tripId);
 	}
 
+	/**
+	 * Returns the trip matching the UUID and group.
+	 *
+	 * @param uuid the trip's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching trip, or <code>null</code> if a matching trip could not be found
+	 */
+	@Override
+	public com.liferay.travels.model.Trip fetchTripByUuidAndGroupId(
+		String uuid, long groupId) {
+
+		return _tripLocalService.fetchTripByUuidAndGroupId(uuid, groupId);
+	}
+
 	@Override
 	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
 
 		return _tripLocalService.getActionableDynamicQuery();
+	}
+
+	@Override
+	public com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery
+		getExportActionableDynamicQuery(
+			com.liferay.exportimport.kernel.lar.PortletDataContext
+				portletDataContext) {
+
+		return _tripLocalService.getExportActionableDynamicQuery(
+			portletDataContext);
 	}
 
 	@Override
@@ -267,6 +292,22 @@ public class TripLocalServiceWrapper
 		return _tripLocalService.getTrip(tripId);
 	}
 
+	/**
+	 * Returns the trip matching the UUID and group.
+	 *
+	 * @param uuid the trip's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching trip
+	 * @throws PortalException if a matching trip could not be found
+	 */
+	@Override
+	public com.liferay.travels.model.Trip getTripByUuidAndGroupId(
+			String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _tripLocalService.getTripByUuidAndGroupId(uuid, groupId);
+	}
+
 	@Override
 	public java.util.List<com.liferay.travels.model.Trip> getTrips() {
 		return _tripLocalService.getTrips();
@@ -291,6 +332,41 @@ public class TripLocalServiceWrapper
 	}
 
 	/**
+	 * Returns all the trips matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the trips
+	 * @param companyId the primary key of the company
+	 * @return the matching trips, or an empty list if no matches were found
+	 */
+	@Override
+	public java.util.List<com.liferay.travels.model.Trip>
+		getTripsByUuidAndCompanyId(String uuid, long companyId) {
+
+		return _tripLocalService.getTripsByUuidAndCompanyId(uuid, companyId);
+	}
+
+	/**
+	 * Returns a range of trips matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the trips
+	 * @param companyId the primary key of the company
+	 * @param start the lower bound of the range of trips
+	 * @param end the upper bound of the range of trips (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the range of matching trips, or an empty list if no matches were found
+	 */
+	@Override
+	public java.util.List<com.liferay.travels.model.Trip>
+		getTripsByUuidAndCompanyId(
+			String uuid, long companyId, int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<com.liferay.travels.model.Trip> orderByComparator) {
+
+		return _tripLocalService.getTripsByUuidAndCompanyId(
+			uuid, companyId, start, end, orderByComparator);
+	}
+
+	/**
 	 * Returns the number of trips.
 	 *
 	 * @return the number of trips
@@ -302,12 +378,12 @@ public class TripLocalServiceWrapper
 
 	@Override
 	public com.liferay.travels.model.Trip updateTrip(
-			long tripId, String name, String description,
-			java.util.Date startingDate, String image)
+			long groupId, long userId, long tripId, String name,
+			String description, java.util.Date startingDate, String image)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _tripLocalService.updateTrip(
-			tripId, name, description, startingDate, image);
+			groupId, userId, tripId, name, description, startingDate, image);
 	}
 
 	/**

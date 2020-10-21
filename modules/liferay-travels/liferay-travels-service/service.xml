@@ -5,6 +5,7 @@
 	<author>Javier de Arcos</author>
 	<namespace>LiferayTravels</namespace>
 	<entity local-service="true" name="Stage" remote-service="true" uuid="true">
+
 		<column name="stageId" primary="true" type="long" />
 		<column name="name" type="String" />
 		<column name="description" type="String" />
@@ -12,21 +13,53 @@
 		<column name="image" type="String" />
 		<column name="tripId" type="long" />
 
+		<!-- Group instance -->
+		<column name="groupId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+
+		<!-- Audit fields -->
+		<column name="companyId" type="long" />
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
+
 		<finder name="TripId" return-type="Collection">
 			<finder-column name="tripId" />
 		</finder>
 
+		<reference entity="Group" package-path="com.liferay.portal" />
+		<reference entity="User" package-path="com.liferay.portal" />
 		<reference entity="Trip" package-path="com.liferay.travels" />
+
+		<!-- Entity services needed for the integration to Asset framework -->
+		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
 	</entity>
 	<entity local-service="true" name="Trip" remote-service="true" uuid="true">
+
 		<column name="tripId" primary="true" type="long" />
 		<column name="name" type="String" />
 		<column name="description" type="String" />
 		<column name="startingDate" type="Date" />
 		<column name="image" type="String" />
 
+		<!-- Group instance -->
+		<column name="groupId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+
+		<!-- Audit fields -->
+		<column name="companyId" type="long" />
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
+
 		<order by="asc">
 			<order-column name="startingDate" />
 		</order>
+
+		<reference entity="Group" package-path="com.liferay.portal" />
+		<reference entity="User" package-path="com.liferay.portal" />
+
+		<!-- Entity services needed for the integration to Asset framework -->
+		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
 	</entity>
 </service-builder>

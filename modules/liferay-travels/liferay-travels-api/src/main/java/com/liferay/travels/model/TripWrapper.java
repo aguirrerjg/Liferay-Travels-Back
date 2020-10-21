@@ -14,6 +14,7 @@
 
 package com.liferay.travels.model;
 
+import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.wrapper.BaseModelWrapper;
 
@@ -47,6 +48,12 @@ public class TripWrapper
 		attributes.put("description", getDescription());
 		attributes.put("startingDate", getStartingDate());
 		attributes.put("image", getImage());
+		attributes.put("groupId", getGroupId());
+		attributes.put("userId", getUserId());
+		attributes.put("userName", getUserName());
+		attributes.put("companyId", getCompanyId());
+		attributes.put("createDate", getCreateDate());
+		attributes.put("modifiedDate", getModifiedDate());
 
 		return attributes;
 	}
@@ -88,6 +95,62 @@ public class TripWrapper
 		if (image != null) {
 			setImage(image);
 		}
+
+		Long groupId = (Long)attributes.get("groupId");
+
+		if (groupId != null) {
+			setGroupId(groupId);
+		}
+
+		Long userId = (Long)attributes.get("userId");
+
+		if (userId != null) {
+			setUserId(userId);
+		}
+
+		String userName = (String)attributes.get("userName");
+
+		if (userName != null) {
+			setUserName(userName);
+		}
+
+		Long companyId = (Long)attributes.get("companyId");
+
+		if (companyId != null) {
+			setCompanyId(companyId);
+		}
+
+		Date createDate = (Date)attributes.get("createDate");
+
+		if (createDate != null) {
+			setCreateDate(createDate);
+		}
+
+		Date modifiedDate = (Date)attributes.get("modifiedDate");
+
+		if (modifiedDate != null) {
+			setModifiedDate(modifiedDate);
+		}
+	}
+
+	/**
+	 * Returns the company ID of this trip.
+	 *
+	 * @return the company ID of this trip
+	 */
+	@Override
+	public long getCompanyId() {
+		return model.getCompanyId();
+	}
+
+	/**
+	 * Returns the create date of this trip.
+	 *
+	 * @return the create date of this trip
+	 */
+	@Override
+	public Date getCreateDate() {
+		return model.getCreateDate();
 	}
 
 	/**
@@ -101,6 +164,16 @@ public class TripWrapper
 	}
 
 	/**
+	 * Returns the group ID of this trip.
+	 *
+	 * @return the group ID of this trip
+	 */
+	@Override
+	public long getGroupId() {
+		return model.getGroupId();
+	}
+
+	/**
 	 * Returns the image of this trip.
 	 *
 	 * @return the image of this trip
@@ -108,6 +181,16 @@ public class TripWrapper
 	@Override
 	public String getImage() {
 		return model.getImage();
+	}
+
+	/**
+	 * Returns the modified date of this trip.
+	 *
+	 * @return the modified date of this trip
+	 */
+	@Override
+	public Date getModifiedDate() {
+		return model.getModifiedDate();
 	}
 
 	/**
@@ -151,6 +234,36 @@ public class TripWrapper
 	}
 
 	/**
+	 * Returns the user ID of this trip.
+	 *
+	 * @return the user ID of this trip
+	 */
+	@Override
+	public long getUserId() {
+		return model.getUserId();
+	}
+
+	/**
+	 * Returns the user name of this trip.
+	 *
+	 * @return the user name of this trip
+	 */
+	@Override
+	public String getUserName() {
+		return model.getUserName();
+	}
+
+	/**
+	 * Returns the user uuid of this trip.
+	 *
+	 * @return the user uuid of this trip
+	 */
+	@Override
+	public String getUserUuid() {
+		return model.getUserUuid();
+	}
+
+	/**
 	 * Returns the uuid of this trip.
 	 *
 	 * @return the uuid of this trip
@@ -166,6 +279,26 @@ public class TripWrapper
 	}
 
 	/**
+	 * Sets the company ID of this trip.
+	 *
+	 * @param companyId the company ID of this trip
+	 */
+	@Override
+	public void setCompanyId(long companyId) {
+		model.setCompanyId(companyId);
+	}
+
+	/**
+	 * Sets the create date of this trip.
+	 *
+	 * @param createDate the create date of this trip
+	 */
+	@Override
+	public void setCreateDate(Date createDate) {
+		model.setCreateDate(createDate);
+	}
+
+	/**
 	 * Sets the description of this trip.
 	 *
 	 * @param description the description of this trip
@@ -176,6 +309,16 @@ public class TripWrapper
 	}
 
 	/**
+	 * Sets the group ID of this trip.
+	 *
+	 * @param groupId the group ID of this trip
+	 */
+	@Override
+	public void setGroupId(long groupId) {
+		model.setGroupId(groupId);
+	}
+
+	/**
 	 * Sets the image of this trip.
 	 *
 	 * @param image the image of this trip
@@ -183,6 +326,16 @@ public class TripWrapper
 	@Override
 	public void setImage(String image) {
 		model.setImage(image);
+	}
+
+	/**
+	 * Sets the modified date of this trip.
+	 *
+	 * @param modifiedDate the modified date of this trip
+	 */
+	@Override
+	public void setModifiedDate(Date modifiedDate) {
+		model.setModifiedDate(modifiedDate);
 	}
 
 	/**
@@ -226,6 +379,36 @@ public class TripWrapper
 	}
 
 	/**
+	 * Sets the user ID of this trip.
+	 *
+	 * @param userId the user ID of this trip
+	 */
+	@Override
+	public void setUserId(long userId) {
+		model.setUserId(userId);
+	}
+
+	/**
+	 * Sets the user name of this trip.
+	 *
+	 * @param userName the user name of this trip
+	 */
+	@Override
+	public void setUserName(String userName) {
+		model.setUserName(userName);
+	}
+
+	/**
+	 * Sets the user uuid of this trip.
+	 *
+	 * @param userUuid the user uuid of this trip
+	 */
+	@Override
+	public void setUserUuid(String userUuid) {
+		model.setUserUuid(userUuid);
+	}
+
+	/**
 	 * Sets the uuid of this trip.
 	 *
 	 * @param uuid the uuid of this trip
@@ -233,6 +416,11 @@ public class TripWrapper
 	@Override
 	public void setUuid(String uuid) {
 		model.setUuid(uuid);
+	}
+
+	@Override
+	public StagedModelType getStagedModelType() {
+		return model.getStagedModelType();
 	}
 
 	@Override

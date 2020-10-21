@@ -14,8 +14,10 @@
 
 package com.liferay.travels.service;
 
+import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -61,8 +63,9 @@ public interface StageLocalService
 	 * Never modify this interface directly. Add custom service methods to <code>com.liferay.travels.service.impl.StageLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the stage local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link StageLocalServiceUtil} if injection and service tracking are not available.
 	 */
 	public Stage addStage(
-		long tripId, String name, String description, String place,
-		String image);
+			long groupId, long userId, long tripId, String name,
+			String description, String place, String image)
+		throws PortalException;
 
 	/**
 	 * Adds the stage to the database. Also notifies the appropriate model listeners.
@@ -195,8 +198,22 @@ public interface StageLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Stage fetchStage(long stageId);
 
+	/**
+	 * Returns the stage matching the UUID and group.
+	 *
+	 * @param uuid the stage's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching stage, or <code>null</code> if a matching stage could not be found
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Stage fetchStageByUuidAndGroupId(String uuid, long groupId);
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
+		PortletDataContext portletDataContext);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
@@ -227,6 +244,18 @@ public interface StageLocalService
 	public Stage getStage(long stageId) throws PortalException;
 
 	/**
+	 * Returns the stage matching the UUID and group.
+	 *
+	 * @param uuid the stage's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching stage
+	 * @throws PortalException if a matching stage could not be found
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Stage getStageByUuidAndGroupId(String uuid, long groupId)
+		throws PortalException;
+
+	/**
 	 * Returns a range of all the stages.
 	 *
 	 * <p>
@@ -242,6 +271,31 @@ public interface StageLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Stage> getStages(long tripId);
+
+	/**
+	 * Returns all the stages matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the stages
+	 * @param companyId the primary key of the company
+	 * @return the matching stages, or an empty list if no matches were found
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Stage> getStagesByUuidAndCompanyId(String uuid, long companyId);
+
+	/**
+	 * Returns a range of stages matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the stages
+	 * @param companyId the primary key of the company
+	 * @param start the lower bound of the range of stages
+	 * @param end the upper bound of the range of stages (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the range of matching stages, or an empty list if no matches were found
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Stage> getStagesByUuidAndCompanyId(
+		String uuid, long companyId, int start, int end,
+		OrderByComparator<Stage> orderByComparator);
 
 	/**
 	 * Returns the number of stages.

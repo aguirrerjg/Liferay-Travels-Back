@@ -14,6 +14,11 @@
 
 package com.liferay.travels.service.base;
 
+import com.liferay.exportimport.kernel.lar.ExportImportHelperUtil;
+import com.liferay.exportimport.kernel.lar.ManifestSummary;
+import com.liferay.exportimport.kernel.lar.PortletDataContext;
+import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
@@ -23,6 +28,7 @@ import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DefaultActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -225,6 +231,18 @@ public abstract class TripLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the trip matching the UUID and group.
+	 *
+	 * @param uuid the trip's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching trip, or <code>null</code> if a matching trip could not be found
+	 */
+	@Override
+	public Trip fetchTripByUuidAndGroupId(String uuid, long groupId) {
+		return tripPersistence.fetchByUUID_G(uuid, groupId);
+	}
+
+	/**
 	 * Returns the trip with the primary key.
 	 *
 	 * @param tripId the primary key of the trip
@@ -276,6 +294,70 @@ public abstract class TripLocalServiceBaseImpl
 		actionableDynamicQuery.setPrimaryKeyPropertyName("tripId");
 	}
 
+	@Override
+	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
+		final PortletDataContext portletDataContext) {
+
+		final ExportActionableDynamicQuery exportActionableDynamicQuery =
+			new ExportActionableDynamicQuery() {
+
+				@Override
+				public long performCount() throws PortalException {
+					ManifestSummary manifestSummary =
+						portletDataContext.getManifestSummary();
+
+					StagedModelType stagedModelType = getStagedModelType();
+
+					long modelAdditionCount = super.performCount();
+
+					manifestSummary.addModelAdditionCount(
+						stagedModelType, modelAdditionCount);
+
+					long modelDeletionCount =
+						ExportImportHelperUtil.getModelDeletionCount(
+							portletDataContext, stagedModelType);
+
+					manifestSummary.addModelDeletionCount(
+						stagedModelType, modelDeletionCount);
+
+					return modelAdditionCount;
+				}
+
+			};
+
+		initActionableDynamicQuery(exportActionableDynamicQuery);
+
+		exportActionableDynamicQuery.setAddCriteriaMethod(
+			new ActionableDynamicQuery.AddCriteriaMethod() {
+
+				@Override
+				public void addCriteria(DynamicQuery dynamicQuery) {
+					portletDataContext.addDateRangeCriteria(
+						dynamicQuery, "modifiedDate");
+				}
+
+			});
+
+		exportActionableDynamicQuery.setCompanyId(
+			portletDataContext.getCompanyId());
+
+		exportActionableDynamicQuery.setPerformActionMethod(
+			new ActionableDynamicQuery.PerformActionMethod<Trip>() {
+
+				@Override
+				public void performAction(Trip trip) throws PortalException {
+					StagedModelDataHandlerUtil.exportStagedModel(
+						portletDataContext, trip);
+				}
+
+			});
+		exportActionableDynamicQuery.setStagedModelType(
+			new StagedModelType(
+				PortalUtil.getClassNameId(Trip.class.getName())));
+
+		return exportActionableDynamicQuery;
+	}
+
 	/**
 	 * @throws PortalException
 	 */
@@ -307,6 +389,52 @@ public abstract class TripLocalServiceBaseImpl
 		throws PortalException {
 
 		return tripPersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	/**
+	 * Returns all the trips matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the trips
+	 * @param companyId the primary key of the company
+	 * @return the matching trips, or an empty list if no matches were found
+	 */
+	@Override
+	public List<Trip> getTripsByUuidAndCompanyId(String uuid, long companyId) {
+		return tripPersistence.findByUuid_C(uuid, companyId);
+	}
+
+	/**
+	 * Returns a range of trips matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the trips
+	 * @param companyId the primary key of the company
+	 * @param start the lower bound of the range of trips
+	 * @param end the upper bound of the range of trips (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the range of matching trips, or an empty list if no matches were found
+	 */
+	@Override
+	public List<Trip> getTripsByUuidAndCompanyId(
+		String uuid, long companyId, int start, int end,
+		OrderByComparator<Trip> orderByComparator) {
+
+		return tripPersistence.findByUuid_C(
+			uuid, companyId, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns the trip matching the UUID and group.
+	 *
+	 * @param uuid the trip's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching trip
+	 * @throws PortalException if a matching trip could not be found
+	 */
+	@Override
+	public Trip getTripByUuidAndGroupId(String uuid, long groupId)
+		throws PortalException {
+
+		return tripPersistence.findByUUID_G(uuid, groupId);
 	}
 
 	/**
@@ -423,11 +551,19 @@ public abstract class TripLocalServiceBaseImpl
 		classNameLocalService;
 
 	@Reference
+	protected com.liferay.portal.kernel.service.GroupLocalService
+		groupLocalService;
+
+	@Reference
 	protected com.liferay.portal.kernel.service.ResourceLocalService
 		resourceLocalService;
 
 	@Reference
 	protected com.liferay.portal.kernel.service.UserLocalService
 		userLocalService;
+
+	@Reference
+	protected com.liferay.asset.kernel.service.AssetEntryLocalService
+		assetEntryLocalService;
 
 }

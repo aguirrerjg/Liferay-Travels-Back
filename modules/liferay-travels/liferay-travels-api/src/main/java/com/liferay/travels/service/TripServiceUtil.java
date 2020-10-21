@@ -38,10 +38,12 @@ public class TripServiceUtil {
 	 * Never modify this class directly. Add custom service methods to <code>com.liferay.travels.service.impl.TripServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static com.liferay.travels.model.Trip addTrip(
-		String name, String description, java.util.Date startingDate,
-		String image) {
+			long groupId, long userId, String name, String description,
+			java.util.Date startingDate, String image)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return getService().addTrip(name, description, startingDate, image);
+		return getService().addTrip(
+			groupId, userId, name, description, startingDate, image);
 	}
 
 	public static com.liferay.travels.model.Trip deleteTrip(long tripId)
@@ -70,12 +72,12 @@ public class TripServiceUtil {
 	}
 
 	public static com.liferay.travels.model.Trip updateTrip(
-			long tripId, String name, String description,
-			java.util.Date startingDate, String image)
+			long groupId, long userId, long tripId, String name,
+			String description, java.util.Date startingDate, String image)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().updateTrip(
-			tripId, name, description, startingDate, image);
+			groupId, userId, tripId, name, description, startingDate, image);
 	}
 
 	public static TripService getService() {

@@ -16,18 +16,22 @@ package com.liferay.travels.service.impl;
 
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.ResourceConstants;
+import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.travels.model.Stage;
 import com.liferay.travels.service.base.StageLocalServiceBaseImpl;
 
 import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * The implementation of the stage local service.
  *
  * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the <code>com.liferay.travel.service.StageLocalService</code> interface.
+ * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the <code>com.liferay.travels.service.StageLocalService</code> interface.
  *
  * <p>
  * This is a local service. Methods of this service will not have security checks based on the propagated JAAS credentials because this service can only be accessed from within the same VM.
@@ -37,34 +41,46 @@ import org.osgi.service.component.annotations.Component;
  * @see StageLocalServiceBaseImpl
  */
 @Component(
-	property = "model.class.name=com.liferay.travel.model.Stage",
+	property = "model.class.name=com.liferay.travels.model.Stage",
 	service = AopService.class
 )
 public class StageLocalServiceImpl extends StageLocalServiceBaseImpl {
 
 	public Stage addStage(
-		long tripId, String name, String description, String place,
-		String image) {
+			long groupId, long userId, long tripId, String name,
+			String description, String place, String image)
+		throws PortalException {
+
+		Group group = _groupLocalService.getGroup(groupId);
 
 		long stageId = counterLocalService.increment();
 
 		Stage newStage = stagePersistence.create(stageId);
 
-		newStage.setName(name);
+		newStage.setCompanyId(group.getCompanyId());
 		newStage.setDescription(description);
+		newStage.setGroupId(groupId);
+		newStage.setName(name);
 		newStage.setPlace(place);
 		newStage.setImage(image);
 		newStage.setTripId(tripId);
+		newStage.setUserId(userId);
 
-		return stagePersistence.update(newStage);
+		resourceLocalService.addResources(
+			group.getCompanyId(), groupId, userId, Stage.class.getName(),
+			stageId, false, true, true);
+
+		return super.addStage(newStage);
 	}
 
 	public Stage deleteStage(long stageId) throws PortalException {
-		return stagePersistence.remove(stageId);
-	}
+		Stage stage = getStage(stageId);
 
-	public Stage getStage(long stageId) throws PortalException {
-		return stagePersistence.findByPrimaryKey(stageId);
+		resourceLocalService.deleteResource(
+			stage.getCompanyId(), Stage.class.getName(),
+			ResourceConstants.SCOPE_INDIVIDUAL, stageId);
+
+		return super.deleteStage(stageId);
 	}
 
 	public List<Stage> getStages(long tripId) {
@@ -83,7 +99,10 @@ public class StageLocalServiceImpl extends StageLocalServiceBaseImpl {
 		stage.setPlace(place);
 		stage.setImage(image);
 
-		return stagePersistence.update(stage);
+		return super.updateStage(stage);
 	}
+
+	@Reference
+	private GroupLocalService _groupLocalService;
 
 }

@@ -63,15 +63,33 @@ import java.rmi.RemoteException;
 @Deprecated
 public class StageServiceSoap {
 
-	public static com.liferay.travels.model.StageSoap[] getStages(long tripId)
+	public static com.liferay.travels.model.StageSoap addStage(
+			long groupId, long userId, long tripId, String name,
+			String description, String place, String image)
 		throws RemoteException {
 
 		try {
-			java.util.List<com.liferay.travels.model.Stage> returnValue =
-				StageServiceUtil.getStages(tripId);
+			com.liferay.travels.model.Stage returnValue =
+				StageServiceUtil.addStage(
+					groupId, userId, tripId, name, description, place, image);
 
-			return com.liferay.travels.model.StageSoap.toSoapModels(
-				returnValue);
+			return com.liferay.travels.model.StageSoap.toSoapModel(returnValue);
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static com.liferay.travels.model.StageSoap deleteStage(long stageId)
+		throws RemoteException {
+
+		try {
+			com.liferay.travels.model.Stage returnValue =
+				StageServiceUtil.deleteStage(stageId);
+
+			return com.liferay.travels.model.StageSoap.toSoapModel(returnValue);
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -96,17 +114,15 @@ public class StageServiceSoap {
 		}
 	}
 
-	public static com.liferay.travels.model.StageSoap addStage(
-			long tripId, String name, String description, String place,
-			String image)
+	public static com.liferay.travels.model.StageSoap[] getStages(long tripId)
 		throws RemoteException {
 
 		try {
-			com.liferay.travels.model.Stage returnValue =
-				StageServiceUtil.addStage(
-					tripId, name, description, place, image);
+			java.util.List<com.liferay.travels.model.Stage> returnValue =
+				StageServiceUtil.getStages(tripId);
 
-			return com.liferay.travels.model.StageSoap.toSoapModel(returnValue);
+			return com.liferay.travels.model.StageSoap.toSoapModels(
+				returnValue);
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -124,22 +140,6 @@ public class StageServiceSoap {
 			com.liferay.travels.model.Stage returnValue =
 				StageServiceUtil.updateStage(
 					stageId, name, description, place, image);
-
-			return com.liferay.travels.model.StageSoap.toSoapModel(returnValue);
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
-	public static com.liferay.travels.model.StageSoap deleteStage(long stageId)
-		throws RemoteException {
-
-		try {
-			com.liferay.travels.model.Stage returnValue =
-				StageServiceUtil.deleteStage(stageId);
 
 			return com.liferay.travels.model.StageSoap.toSoapModel(returnValue);
 		}

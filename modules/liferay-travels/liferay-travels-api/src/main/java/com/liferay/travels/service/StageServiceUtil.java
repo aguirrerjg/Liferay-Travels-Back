@@ -38,10 +38,12 @@ public class StageServiceUtil {
 	 * Never modify this class directly. Add custom service methods to <code>com.liferay.travels.service.impl.StageServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static com.liferay.travels.model.Stage addStage(
-		long tripId, String name, String description, String place,
-		String image) {
+			long groupId, long userId, long tripId, String name,
+			String description, String place, String image)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return getService().addStage(tripId, name, description, place, image);
+		return getService().addStage(
+			groupId, userId, tripId, name, description, place, image);
 	}
 
 	public static com.liferay.travels.model.Stage deleteStage(long stageId)
@@ -66,7 +68,8 @@ public class StageServiceUtil {
 	}
 
 	public static java.util.List<com.liferay.travels.model.Stage> getStages(
-		long tripId) {
+			long tripId)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().getStages(tripId);
 	}

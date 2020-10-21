@@ -14,9 +14,11 @@
 
 package com.liferay.travels.model;
 
+import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.wrapper.BaseModelWrapper;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,6 +49,12 @@ public class StageWrapper
 		attributes.put("place", getPlace());
 		attributes.put("image", getImage());
 		attributes.put("tripId", getTripId());
+		attributes.put("groupId", getGroupId());
+		attributes.put("userId", getUserId());
+		attributes.put("userName", getUserName());
+		attributes.put("companyId", getCompanyId());
+		attributes.put("createDate", getCreateDate());
+		attributes.put("modifiedDate", getModifiedDate());
 
 		return attributes;
 	}
@@ -94,6 +102,62 @@ public class StageWrapper
 		if (tripId != null) {
 			setTripId(tripId);
 		}
+
+		Long groupId = (Long)attributes.get("groupId");
+
+		if (groupId != null) {
+			setGroupId(groupId);
+		}
+
+		Long userId = (Long)attributes.get("userId");
+
+		if (userId != null) {
+			setUserId(userId);
+		}
+
+		String userName = (String)attributes.get("userName");
+
+		if (userName != null) {
+			setUserName(userName);
+		}
+
+		Long companyId = (Long)attributes.get("companyId");
+
+		if (companyId != null) {
+			setCompanyId(companyId);
+		}
+
+		Date createDate = (Date)attributes.get("createDate");
+
+		if (createDate != null) {
+			setCreateDate(createDate);
+		}
+
+		Date modifiedDate = (Date)attributes.get("modifiedDate");
+
+		if (modifiedDate != null) {
+			setModifiedDate(modifiedDate);
+		}
+	}
+
+	/**
+	 * Returns the company ID of this stage.
+	 *
+	 * @return the company ID of this stage
+	 */
+	@Override
+	public long getCompanyId() {
+		return model.getCompanyId();
+	}
+
+	/**
+	 * Returns the create date of this stage.
+	 *
+	 * @return the create date of this stage
+	 */
+	@Override
+	public Date getCreateDate() {
+		return model.getCreateDate();
 	}
 
 	/**
@@ -107,6 +171,16 @@ public class StageWrapper
 	}
 
 	/**
+	 * Returns the group ID of this stage.
+	 *
+	 * @return the group ID of this stage
+	 */
+	@Override
+	public long getGroupId() {
+		return model.getGroupId();
+	}
+
+	/**
 	 * Returns the image of this stage.
 	 *
 	 * @return the image of this stage
@@ -114,6 +188,16 @@ public class StageWrapper
 	@Override
 	public String getImage() {
 		return model.getImage();
+	}
+
+	/**
+	 * Returns the modified date of this stage.
+	 *
+	 * @return the modified date of this stage
+	 */
+	@Override
+	public Date getModifiedDate() {
+		return model.getModifiedDate();
 	}
 
 	/**
@@ -167,6 +251,36 @@ public class StageWrapper
 	}
 
 	/**
+	 * Returns the user ID of this stage.
+	 *
+	 * @return the user ID of this stage
+	 */
+	@Override
+	public long getUserId() {
+		return model.getUserId();
+	}
+
+	/**
+	 * Returns the user name of this stage.
+	 *
+	 * @return the user name of this stage
+	 */
+	@Override
+	public String getUserName() {
+		return model.getUserName();
+	}
+
+	/**
+	 * Returns the user uuid of this stage.
+	 *
+	 * @return the user uuid of this stage
+	 */
+	@Override
+	public String getUserUuid() {
+		return model.getUserUuid();
+	}
+
+	/**
 	 * Returns the uuid of this stage.
 	 *
 	 * @return the uuid of this stage
@@ -182,6 +296,26 @@ public class StageWrapper
 	}
 
 	/**
+	 * Sets the company ID of this stage.
+	 *
+	 * @param companyId the company ID of this stage
+	 */
+	@Override
+	public void setCompanyId(long companyId) {
+		model.setCompanyId(companyId);
+	}
+
+	/**
+	 * Sets the create date of this stage.
+	 *
+	 * @param createDate the create date of this stage
+	 */
+	@Override
+	public void setCreateDate(Date createDate) {
+		model.setCreateDate(createDate);
+	}
+
+	/**
 	 * Sets the description of this stage.
 	 *
 	 * @param description the description of this stage
@@ -192,6 +326,16 @@ public class StageWrapper
 	}
 
 	/**
+	 * Sets the group ID of this stage.
+	 *
+	 * @param groupId the group ID of this stage
+	 */
+	@Override
+	public void setGroupId(long groupId) {
+		model.setGroupId(groupId);
+	}
+
+	/**
 	 * Sets the image of this stage.
 	 *
 	 * @param image the image of this stage
@@ -199,6 +343,16 @@ public class StageWrapper
 	@Override
 	public void setImage(String image) {
 		model.setImage(image);
+	}
+
+	/**
+	 * Sets the modified date of this stage.
+	 *
+	 * @param modifiedDate the modified date of this stage
+	 */
+	@Override
+	public void setModifiedDate(Date modifiedDate) {
+		model.setModifiedDate(modifiedDate);
 	}
 
 	/**
@@ -252,6 +406,36 @@ public class StageWrapper
 	}
 
 	/**
+	 * Sets the user ID of this stage.
+	 *
+	 * @param userId the user ID of this stage
+	 */
+	@Override
+	public void setUserId(long userId) {
+		model.setUserId(userId);
+	}
+
+	/**
+	 * Sets the user name of this stage.
+	 *
+	 * @param userName the user name of this stage
+	 */
+	@Override
+	public void setUserName(String userName) {
+		model.setUserName(userName);
+	}
+
+	/**
+	 * Sets the user uuid of this stage.
+	 *
+	 * @param userUuid the user uuid of this stage
+	 */
+	@Override
+	public void setUserUuid(String userUuid) {
+		model.setUserUuid(userUuid);
+	}
+
+	/**
 	 * Sets the uuid of this stage.
 	 *
 	 * @param uuid the uuid of this stage
@@ -259,6 +443,11 @@ public class StageWrapper
 	@Override
 	public void setUuid(String uuid) {
 		model.setUuid(uuid);
+	}
+
+	@Override
+	public StagedModelType getStagedModelType() {
+		return model.getStagedModelType();
 	}
 
 	@Override

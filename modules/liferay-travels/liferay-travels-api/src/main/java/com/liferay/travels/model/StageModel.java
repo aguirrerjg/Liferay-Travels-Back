@@ -16,6 +16,11 @@ package com.liferay.travels.model;
 
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.model.BaseModel;
+import com.liferay.portal.kernel.model.GroupedModel;
+import com.liferay.portal.kernel.model.ShardedModel;
+import com.liferay.portal.kernel.model.StagedAuditedModel;
+
+import java.util.Date;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -31,7 +36,8 @@ import org.osgi.annotation.versioning.ProviderType;
  * @generated
  */
 @ProviderType
-public interface StageModel extends BaseModel<Stage> {
+public interface StageModel
+	extends BaseModel<Stage>, GroupedModel, ShardedModel, StagedAuditedModel {
 
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -59,6 +65,7 @@ public interface StageModel extends BaseModel<Stage> {
 	 * @return the uuid of this stage
 	 */
 	@AutoEscape
+	@Override
 	public String getUuid();
 
 	/**
@@ -66,6 +73,7 @@ public interface StageModel extends BaseModel<Stage> {
 	 *
 	 * @param uuid the uuid of this stage
 	 */
+	@Override
 	public void setUuid(String uuid);
 
 	/**
@@ -155,5 +163,118 @@ public interface StageModel extends BaseModel<Stage> {
 	 * @param tripId the trip ID of this stage
 	 */
 	public void setTripId(long tripId);
+
+	/**
+	 * Returns the group ID of this stage.
+	 *
+	 * @return the group ID of this stage
+	 */
+	@Override
+	public long getGroupId();
+
+	/**
+	 * Sets the group ID of this stage.
+	 *
+	 * @param groupId the group ID of this stage
+	 */
+	@Override
+	public void setGroupId(long groupId);
+
+	/**
+	 * Returns the user ID of this stage.
+	 *
+	 * @return the user ID of this stage
+	 */
+	@Override
+	public long getUserId();
+
+	/**
+	 * Sets the user ID of this stage.
+	 *
+	 * @param userId the user ID of this stage
+	 */
+	@Override
+	public void setUserId(long userId);
+
+	/**
+	 * Returns the user uuid of this stage.
+	 *
+	 * @return the user uuid of this stage
+	 */
+	@Override
+	public String getUserUuid();
+
+	/**
+	 * Sets the user uuid of this stage.
+	 *
+	 * @param userUuid the user uuid of this stage
+	 */
+	@Override
+	public void setUserUuid(String userUuid);
+
+	/**
+	 * Returns the user name of this stage.
+	 *
+	 * @return the user name of this stage
+	 */
+	@AutoEscape
+	@Override
+	public String getUserName();
+
+	/**
+	 * Sets the user name of this stage.
+	 *
+	 * @param userName the user name of this stage
+	 */
+	@Override
+	public void setUserName(String userName);
+
+	/**
+	 * Returns the company ID of this stage.
+	 *
+	 * @return the company ID of this stage
+	 */
+	@Override
+	public long getCompanyId();
+
+	/**
+	 * Sets the company ID of this stage.
+	 *
+	 * @param companyId the company ID of this stage
+	 */
+	@Override
+	public void setCompanyId(long companyId);
+
+	/**
+	 * Returns the create date of this stage.
+	 *
+	 * @return the create date of this stage
+	 */
+	@Override
+	public Date getCreateDate();
+
+	/**
+	 * Sets the create date of this stage.
+	 *
+	 * @param createDate the create date of this stage
+	 */
+	@Override
+	public void setCreateDate(Date createDate);
+
+	/**
+	 * Returns the modified date of this stage.
+	 *
+	 * @return the modified date of this stage
+	 */
+	@Override
+	public Date getModifiedDate();
+
+	/**
+	 * Sets the modified date of this stage.
+	 *
+	 * @param modifiedDate the modified date of this stage
+	 */
+	@Override
+	public void setModifiedDate(Date modifiedDate);
 
 }

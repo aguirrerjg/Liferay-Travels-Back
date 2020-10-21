@@ -51,118 +51,18 @@ import com.liferay.travels.service.StageServiceUtil;
  */
 public class StageServiceHttp {
 
-	public static java.util.List<com.liferay.travels.model.Stage> getStages(
-		HttpPrincipal httpPrincipal, long tripId) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				StageServiceUtil.class, "getStages", _getStagesParameterTypes0);
-
-			MethodHandler methodHandler = new MethodHandler(methodKey, tripId);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (java.util.List<com.liferay.travels.model.Stage>)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
-	public static com.liferay.travels.model.Stage getStage(
-			HttpPrincipal httpPrincipal, long stageId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				StageServiceUtil.class, "getStage", _getStageParameterTypes1);
-
-			MethodHandler methodHandler = new MethodHandler(methodKey, stageId);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				if (exception instanceof
-						com.liferay.portal.kernel.exception.PortalException) {
-
-					throw (com.liferay.portal.kernel.exception.PortalException)
-						exception;
-				}
-
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (com.liferay.travels.model.Stage)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
 	public static com.liferay.travels.model.Stage addStage(
-		HttpPrincipal httpPrincipal, long tripId, String name,
-		String description, String place, String image) {
-
-		try {
-			MethodKey methodKey = new MethodKey(
-				StageServiceUtil.class, "addStage", _addStageParameterTypes2);
-
-			MethodHandler methodHandler = new MethodHandler(
-				methodKey, tripId, name, description, place, image);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception exception) {
-				throw new com.liferay.portal.kernel.exception.SystemException(
-					exception);
-			}
-
-			return (com.liferay.travels.model.Stage)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException
-					systemException) {
-
-			_log.error(systemException, systemException);
-
-			throw systemException;
-		}
-	}
-
-	public static com.liferay.travels.model.Stage updateStage(
-			HttpPrincipal httpPrincipal, long stageId, String name,
-			String description, String place, String image)
+			HttpPrincipal httpPrincipal, long groupId, long userId, long tripId,
+			String name, String description, String place, String image)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				StageServiceUtil.class, "updateStage",
-				_updateStageParameterTypes3);
+				StageServiceUtil.class, "addStage", _addStageParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, stageId, name, description, place, image);
+				methodKey, groupId, userId, tripId, name, description, place,
+				image);
 
 			Object returnObj = null;
 
@@ -199,7 +99,7 @@ public class StageServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				StageServiceUtil.class, "deleteStage",
-				_deleteStageParameterTypes4);
+				_deleteStageParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, stageId);
 
@@ -231,22 +131,140 @@ public class StageServiceHttp {
 		}
 	}
 
+	public static com.liferay.travels.model.Stage getStage(
+			HttpPrincipal httpPrincipal, long stageId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				StageServiceUtil.class, "getStage", _getStageParameterTypes2);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, stageId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				if (exception instanceof
+						com.liferay.portal.kernel.exception.PortalException) {
+
+					throw (com.liferay.portal.kernel.exception.PortalException)
+						exception;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (com.liferay.travels.model.Stage)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static java.util.List<com.liferay.travels.model.Stage> getStages(
+			HttpPrincipal httpPrincipal, long tripId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				StageServiceUtil.class, "getStages", _getStagesParameterTypes3);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, tripId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				if (exception instanceof
+						com.liferay.portal.kernel.exception.PortalException) {
+
+					throw (com.liferay.portal.kernel.exception.PortalException)
+						exception;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (java.util.List<com.liferay.travels.model.Stage>)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static com.liferay.travels.model.Stage updateStage(
+			HttpPrincipal httpPrincipal, long stageId, String name,
+			String description, String place, String image)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				StageServiceUtil.class, "updateStage",
+				_updateStageParameterTypes4);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, stageId, name, description, place, image);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				if (exception instanceof
+						com.liferay.portal.kernel.exception.PortalException) {
+
+					throw (com.liferay.portal.kernel.exception.PortalException)
+						exception;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (com.liferay.travels.model.Stage)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(StageServiceHttp.class);
 
-	private static final Class<?>[] _getStagesParameterTypes0 = new Class[] {
+	private static final Class<?>[] _addStageParameterTypes0 = new Class[] {
+		long.class, long.class, long.class, String.class, String.class,
+		String.class, String.class
+	};
+	private static final Class<?>[] _deleteStageParameterTypes1 = new Class[] {
 		long.class
 	};
-	private static final Class<?>[] _getStageParameterTypes1 = new Class[] {
+	private static final Class<?>[] _getStageParameterTypes2 = new Class[] {
 		long.class
 	};
-	private static final Class<?>[] _addStageParameterTypes2 = new Class[] {
+	private static final Class<?>[] _getStagesParameterTypes3 = new Class[] {
+		long.class
+	};
+	private static final Class<?>[] _updateStageParameterTypes4 = new Class[] {
 		long.class, String.class, String.class, String.class, String.class
-	};
-	private static final Class<?>[] _updateStageParameterTypes3 = new Class[] {
-		long.class, String.class, String.class, String.class, String.class
-	};
-	private static final Class<?>[] _deleteStageParameterTypes4 = new Class[] {
-		long.class
 	};
 
 }

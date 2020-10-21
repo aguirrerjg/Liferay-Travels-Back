@@ -16,14 +16,19 @@ package com.liferay.travels.model.impl;
 
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
+import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.ModelWrapper;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.travels.model.Stage;
 import com.liferay.travels.model.StageModel;
@@ -38,6 +43,7 @@ import java.sql.Types;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -70,7 +76,10 @@ public class StageModelImpl extends BaseModelImpl<Stage> implements StageModel {
 		{"uuid_", Types.VARCHAR}, {"stageId", Types.BIGINT},
 		{"name", Types.VARCHAR}, {"description", Types.VARCHAR},
 		{"place", Types.VARCHAR}, {"image", Types.VARCHAR},
-		{"tripId", Types.BIGINT}
+		{"tripId", Types.BIGINT}, {"groupId", Types.BIGINT},
+		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
+		{"companyId", Types.BIGINT}, {"createDate", Types.TIMESTAMP},
+		{"modifiedDate", Types.TIMESTAMP}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -84,10 +93,16 @@ public class StageModelImpl extends BaseModelImpl<Stage> implements StageModel {
 		TABLE_COLUMNS_MAP.put("place", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("image", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("tripId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table LiferayTravels_Stage (uuid_ VARCHAR(75) null,stageId LONG not null primary key,name VARCHAR(75) null,description VARCHAR(75) null,place VARCHAR(75) null,image VARCHAR(75) null,tripId LONG)";
+		"create table LiferayTravels_Stage (uuid_ VARCHAR(75) null,stageId LONG not null primary key,name VARCHAR(75) null,description VARCHAR(75) null,place VARCHAR(75) null,image TEXT null,tripId LONG,groupId LONG,userId LONG,userName VARCHAR(75) null,companyId LONG,createDate DATE null,modifiedDate DATE null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table LiferayTravels_Stage";
@@ -103,11 +118,15 @@ public class StageModelImpl extends BaseModelImpl<Stage> implements StageModel {
 
 	public static final String TX_MANAGER = "liferayTransactionManager";
 
-	public static final long TRIPID_COLUMN_BITMASK = 1L;
+	public static final long COMPANYID_COLUMN_BITMASK = 1L;
 
-	public static final long UUID_COLUMN_BITMASK = 2L;
+	public static final long GROUPID_COLUMN_BITMASK = 2L;
 
-	public static final long STAGEID_COLUMN_BITMASK = 4L;
+	public static final long TRIPID_COLUMN_BITMASK = 4L;
+
+	public static final long UUID_COLUMN_BITMASK = 8L;
+
+	public static final long STAGEID_COLUMN_BITMASK = 16L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -145,6 +164,12 @@ public class StageModelImpl extends BaseModelImpl<Stage> implements StageModel {
 		model.setPlace(soapModel.getPlace());
 		model.setImage(soapModel.getImage());
 		model.setTripId(soapModel.getTripId());
+		model.setGroupId(soapModel.getGroupId());
+		model.setUserId(soapModel.getUserId());
+		model.setUserName(soapModel.getUserName());
+		model.setCompanyId(soapModel.getCompanyId());
+		model.setCreateDate(soapModel.getCreateDate());
+		model.setModifiedDate(soapModel.getModifiedDate());
 
 		return model;
 	}
@@ -310,6 +335,24 @@ public class StageModelImpl extends BaseModelImpl<Stage> implements StageModel {
 		attributeGetterFunctions.put("tripId", Stage::getTripId);
 		attributeSetterBiConsumers.put(
 			"tripId", (BiConsumer<Stage, Long>)Stage::setTripId);
+		attributeGetterFunctions.put("groupId", Stage::getGroupId);
+		attributeSetterBiConsumers.put(
+			"groupId", (BiConsumer<Stage, Long>)Stage::setGroupId);
+		attributeGetterFunctions.put("userId", Stage::getUserId);
+		attributeSetterBiConsumers.put(
+			"userId", (BiConsumer<Stage, Long>)Stage::setUserId);
+		attributeGetterFunctions.put("userName", Stage::getUserName);
+		attributeSetterBiConsumers.put(
+			"userName", (BiConsumer<Stage, String>)Stage::setUserName);
+		attributeGetterFunctions.put("companyId", Stage::getCompanyId);
+		attributeSetterBiConsumers.put(
+			"companyId", (BiConsumer<Stage, Long>)Stage::setCompanyId);
+		attributeGetterFunctions.put("createDate", Stage::getCreateDate);
+		attributeSetterBiConsumers.put(
+			"createDate", (BiConsumer<Stage, Date>)Stage::setCreateDate);
+		attributeGetterFunctions.put("modifiedDate", Stage::getModifiedDate);
+		attributeSetterBiConsumers.put(
+			"modifiedDate", (BiConsumer<Stage, Date>)Stage::setModifiedDate);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
@@ -441,6 +484,129 @@ public class StageModelImpl extends BaseModelImpl<Stage> implements StageModel {
 		return _originalTripId;
 	}
 
+	@JSON
+	@Override
+	public long getGroupId() {
+		return _groupId;
+	}
+
+	@Override
+	public void setGroupId(long groupId) {
+		_columnBitmask |= GROUPID_COLUMN_BITMASK;
+
+		if (!_setOriginalGroupId) {
+			_setOriginalGroupId = true;
+
+			_originalGroupId = _groupId;
+		}
+
+		_groupId = groupId;
+	}
+
+	public long getOriginalGroupId() {
+		return _originalGroupId;
+	}
+
+	@JSON
+	@Override
+	public long getUserId() {
+		return _userId;
+	}
+
+	@Override
+	public void setUserId(long userId) {
+		_userId = userId;
+	}
+
+	@Override
+	public String getUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException portalException) {
+			return "";
+		}
+	}
+
+	@Override
+	public void setUserUuid(String userUuid) {
+	}
+
+	@JSON
+	@Override
+	public String getUserName() {
+		if (_userName == null) {
+			return "";
+		}
+		else {
+			return _userName;
+		}
+	}
+
+	@Override
+	public void setUserName(String userName) {
+		_userName = userName;
+	}
+
+	@JSON
+	@Override
+	public long getCompanyId() {
+		return _companyId;
+	}
+
+	@Override
+	public void setCompanyId(long companyId) {
+		_columnBitmask |= COMPANYID_COLUMN_BITMASK;
+
+		if (!_setOriginalCompanyId) {
+			_setOriginalCompanyId = true;
+
+			_originalCompanyId = _companyId;
+		}
+
+		_companyId = companyId;
+	}
+
+	public long getOriginalCompanyId() {
+		return _originalCompanyId;
+	}
+
+	@JSON
+	@Override
+	public Date getCreateDate() {
+		return _createDate;
+	}
+
+	@Override
+	public void setCreateDate(Date createDate) {
+		_createDate = createDate;
+	}
+
+	@JSON
+	@Override
+	public Date getModifiedDate() {
+		return _modifiedDate;
+	}
+
+	public boolean hasSetModifiedDate() {
+		return _setModifiedDate;
+	}
+
+	@Override
+	public void setModifiedDate(Date modifiedDate) {
+		_setModifiedDate = true;
+
+		_modifiedDate = modifiedDate;
+	}
+
+	@Override
+	public StagedModelType getStagedModelType() {
+		return new StagedModelType(
+			PortalUtil.getClassNameId(Stage.class.getName()));
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -448,7 +614,7 @@ public class StageModelImpl extends BaseModelImpl<Stage> implements StageModel {
 	@Override
 	public ExpandoBridge getExpandoBridge() {
 		return ExpandoBridgeFactoryUtil.getExpandoBridge(
-			0, Stage.class.getName(), getPrimaryKey());
+			getCompanyId(), Stage.class.getName(), getPrimaryKey());
 	}
 
 	@Override
@@ -484,6 +650,12 @@ public class StageModelImpl extends BaseModelImpl<Stage> implements StageModel {
 		stageImpl.setPlace(getPlace());
 		stageImpl.setImage(getImage());
 		stageImpl.setTripId(getTripId());
+		stageImpl.setGroupId(getGroupId());
+		stageImpl.setUserId(getUserId());
+		stageImpl.setUserName(getUserName());
+		stageImpl.setCompanyId(getCompanyId());
+		stageImpl.setCreateDate(getCreateDate());
+		stageImpl.setModifiedDate(getModifiedDate());
 
 		stageImpl.resetOriginalValues();
 
@@ -560,6 +732,16 @@ public class StageModelImpl extends BaseModelImpl<Stage> implements StageModel {
 
 		stageModelImpl._setOriginalTripId = false;
 
+		stageModelImpl._originalGroupId = stageModelImpl._groupId;
+
+		stageModelImpl._setOriginalGroupId = false;
+
+		stageModelImpl._originalCompanyId = stageModelImpl._companyId;
+
+		stageModelImpl._setOriginalCompanyId = false;
+
+		stageModelImpl._setModifiedDate = false;
+
 		stageModelImpl._columnBitmask = 0;
 	}
 
@@ -610,6 +792,38 @@ public class StageModelImpl extends BaseModelImpl<Stage> implements StageModel {
 		}
 
 		stageCacheModel.tripId = getTripId();
+
+		stageCacheModel.groupId = getGroupId();
+
+		stageCacheModel.userId = getUserId();
+
+		stageCacheModel.userName = getUserName();
+
+		String userName = stageCacheModel.userName;
+
+		if ((userName != null) && (userName.length() == 0)) {
+			stageCacheModel.userName = null;
+		}
+
+		stageCacheModel.companyId = getCompanyId();
+
+		Date createDate = getCreateDate();
+
+		if (createDate != null) {
+			stageCacheModel.createDate = createDate.getTime();
+		}
+		else {
+			stageCacheModel.createDate = Long.MIN_VALUE;
+		}
+
+		Date modifiedDate = getModifiedDate();
+
+		if (modifiedDate != null) {
+			stageCacheModel.modifiedDate = modifiedDate.getTime();
+		}
+		else {
+			stageCacheModel.modifiedDate = Long.MIN_VALUE;
+		}
 
 		return stageCacheModel;
 	}
@@ -692,6 +906,17 @@ public class StageModelImpl extends BaseModelImpl<Stage> implements StageModel {
 	private long _tripId;
 	private long _originalTripId;
 	private boolean _setOriginalTripId;
+	private long _groupId;
+	private long _originalGroupId;
+	private boolean _setOriginalGroupId;
+	private long _userId;
+	private String _userName;
+	private long _companyId;
+	private long _originalCompanyId;
+	private boolean _setOriginalCompanyId;
+	private Date _createDate;
+	private Date _modifiedDate;
+	private boolean _setModifiedDate;
 	private long _columnBitmask;
 	private Stage _escapedModel;
 

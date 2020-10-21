@@ -38,10 +38,12 @@ public class TripLocalServiceUtil {
 	 * Never modify this class directly. Add custom service methods to <code>com.liferay.travels.service.impl.TripLocalServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static com.liferay.travels.model.Trip addTrip(
-		String name, String description, java.util.Date startingDate,
-		String image) {
+			long groupId, long userId, String name, String description,
+			java.util.Date startingDate, String image)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return getService().addTrip(name, description, startingDate, image);
+		return getService().addTrip(
+			groupId, userId, name, description, startingDate, image);
 	}
 
 	/**
@@ -213,10 +215,31 @@ public class TripLocalServiceUtil {
 		return getService().fetchTrip(tripId);
 	}
 
+	/**
+	 * Returns the trip matching the UUID and group.
+	 *
+	 * @param uuid the trip's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching trip, or <code>null</code> if a matching trip could not be found
+	 */
+	public static com.liferay.travels.model.Trip fetchTripByUuidAndGroupId(
+		String uuid, long groupId) {
+
+		return getService().fetchTripByUuidAndGroupId(uuid, groupId);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
 
 		return getService().getActionableDynamicQuery();
+	}
+
+	public static com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery
+		getExportActionableDynamicQuery(
+			com.liferay.exportimport.kernel.lar.PortletDataContext
+				portletDataContext) {
+
+		return getService().getExportActionableDynamicQuery(portletDataContext);
 	}
 
 	public static
@@ -258,6 +281,21 @@ public class TripLocalServiceUtil {
 		return getService().getTrip(tripId);
 	}
 
+	/**
+	 * Returns the trip matching the UUID and group.
+	 *
+	 * @param uuid the trip's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching trip
+	 * @throws PortalException if a matching trip could not be found
+	 */
+	public static com.liferay.travels.model.Trip getTripByUuidAndGroupId(
+			String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return getService().getTripByUuidAndGroupId(uuid, groupId);
+	}
+
 	public static java.util.List<com.liferay.travels.model.Trip> getTrips() {
 		return getService().getTrips();
 	}
@@ -280,6 +318,39 @@ public class TripLocalServiceUtil {
 	}
 
 	/**
+	 * Returns all the trips matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the trips
+	 * @param companyId the primary key of the company
+	 * @return the matching trips, or an empty list if no matches were found
+	 */
+	public static java.util.List<com.liferay.travels.model.Trip>
+		getTripsByUuidAndCompanyId(String uuid, long companyId) {
+
+		return getService().getTripsByUuidAndCompanyId(uuid, companyId);
+	}
+
+	/**
+	 * Returns a range of trips matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the trips
+	 * @param companyId the primary key of the company
+	 * @param start the lower bound of the range of trips
+	 * @param end the upper bound of the range of trips (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the range of matching trips, or an empty list if no matches were found
+	 */
+	public static java.util.List<com.liferay.travels.model.Trip>
+		getTripsByUuidAndCompanyId(
+			String uuid, long companyId, int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<com.liferay.travels.model.Trip> orderByComparator) {
+
+		return getService().getTripsByUuidAndCompanyId(
+			uuid, companyId, start, end, orderByComparator);
+	}
+
+	/**
 	 * Returns the number of trips.
 	 *
 	 * @return the number of trips
@@ -289,12 +360,12 @@ public class TripLocalServiceUtil {
 	}
 
 	public static com.liferay.travels.model.Trip updateTrip(
-			long tripId, String name, String description,
-			java.util.Date startingDate, String image)
+			long groupId, long userId, long tripId, String name,
+			String description, java.util.Date startingDate, String image)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().updateTrip(
-			tripId, name, description, startingDate, image);
+			groupId, userId, tripId, name, description, startingDate, image);
 	}
 
 	/**

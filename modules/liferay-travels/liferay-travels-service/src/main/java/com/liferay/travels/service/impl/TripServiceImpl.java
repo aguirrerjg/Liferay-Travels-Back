@@ -16,6 +16,10 @@ package com.liferay.travels.service.impl;
 
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
+import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
+import com.liferay.travels.constants.TravelsConstants;
 import com.liferay.travels.model.Trip;
 import com.liferay.travels.service.base.TripServiceBaseImpl;
 
@@ -23,12 +27,15 @@ import java.util.Date;
 import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * The implementation of the trip remote service.
  *
  * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the <code>com.liferay.travel.service.TripService</code> interface.
+ * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the <code>com.liferay.travels.service.TripService</code> interface.
  *
  * <p>
  * This is a remote service. Methods of this service are expected to have security checks based on the propagated JAAS credentials because this service can be accessed remotely.
@@ -47,16 +54,28 @@ import org.osgi.service.component.annotations.Component;
 public class TripServiceImpl extends TripServiceBaseImpl {
 
 	public Trip addTrip(
-		String name, String description, Date startingDate, String image) {
+			long groupId, long userId, String name, String description,
+			Date startingDate, String image)
+		throws PortalException {
 
-		return tripLocalService.addTrip(name, description, startingDate, image);
+		_portletResourcePermission.check(
+			getPermissionChecker(), groupId, ActionKeys.ADD_ENTRY);
+
+		return tripLocalService.addTrip(
+			groupId, userId, name, description, startingDate, image);
 	}
 
 	public Trip deleteTrip(long tripId) throws PortalException {
+		_tripModelResourcePermission.check(
+			getPermissionChecker(), tripId, ActionKeys.DELETE);
+
 		return tripLocalService.deleteTrip(tripId);
 	}
 
 	public Trip getTrip(long tripId) throws PortalException {
+		_tripModelResourcePermission.check(
+			getPermissionChecker(), tripId, ActionKeys.VIEW);
+
 		return tripLocalService.getTrip(tripId);
 	}
 
@@ -65,12 +84,29 @@ public class TripServiceImpl extends TripServiceBaseImpl {
 	}
 
 	public Trip updateTrip(
-			long tripId, String name, String description, Date startingDate,
-			String image)
+			long groupId, long userId, long tripId, String name,
+			String description, Date startingDate, String image)
 		throws PortalException {
 
+		_tripModelResourcePermission.check(
+			getPermissionChecker(), tripId, ActionKeys.UPDATE);
+
 		return tripLocalService.updateTrip(
-			tripId, name, description, startingDate, image);
+			groupId, userId, tripId, name, description, startingDate, image);
 	}
+
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(resource.name=" + TravelsConstants.RESOURCE_NAME + ")"
+	)
+	private volatile PortletResourcePermission _portletResourcePermission;
+
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(model.class.name=" + TravelsConstants.RESOURCE_NAME + ".Trip)"
+	)
+	private volatile ModelResourcePermission<Trip> _tripModelResourcePermission;
 
 }

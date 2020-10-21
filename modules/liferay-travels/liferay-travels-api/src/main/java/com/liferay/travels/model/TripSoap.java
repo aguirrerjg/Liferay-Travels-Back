@@ -39,6 +39,12 @@ public class TripSoap implements Serializable {
 		soapModel.setDescription(model.getDescription());
 		soapModel.setStartingDate(model.getStartingDate());
 		soapModel.setImage(model.getImage());
+		soapModel.setGroupId(model.getGroupId());
+		soapModel.setUserId(model.getUserId());
+		soapModel.setUserName(model.getUserName());
+		soapModel.setCompanyId(model.getCompanyId());
+		soapModel.setCreateDate(model.getCreateDate());
+		soapModel.setModifiedDate(model.getModifiedDate());
 
 		return soapModel;
 	}
@@ -139,11 +145,65 @@ public class TripSoap implements Serializable {
 		_image = image;
 	}
 
+	public long getGroupId() {
+		return _groupId;
+	}
+
+	public void setGroupId(long groupId) {
+		_groupId = groupId;
+	}
+
+	public long getUserId() {
+		return _userId;
+	}
+
+	public void setUserId(long userId) {
+		_userId = userId;
+	}
+
+	public String getUserName() {
+		return _userName;
+	}
+
+	public void setUserName(String userName) {
+		_userName = userName;
+	}
+
+	public long getCompanyId() {
+		return _companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		_companyId = companyId;
+	}
+
+	public Date getCreateDate() {
+		return _createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		_createDate = createDate;
+	}
+
+	public Date getModifiedDate() {
+		return _modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		_modifiedDate = modifiedDate;
+	}
+
 	private String _uuid;
 	private long _tripId;
 	private String _name;
 	private String _description;
 	private Date _startingDate;
 	private String _image;
+	private long _groupId;
+	private long _userId;
+	private String _userName;
+	private long _companyId;
+	private Date _createDate;
+	private Date _modifiedDate;
 
 }

@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import java.util.Date;
+
 /**
  * The cache model class for representing Stage in entity cache.
  *
@@ -58,7 +60,7 @@ public class StageCacheModel implements CacheModel<Stage>, Externalizable {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -74,6 +76,18 @@ public class StageCacheModel implements CacheModel<Stage>, Externalizable {
 		sb.append(image);
 		sb.append(", tripId=");
 		sb.append(tripId);
+		sb.append(", groupId=");
+		sb.append(groupId);
+		sb.append(", userId=");
+		sb.append(userId);
+		sb.append(", userName=");
+		sb.append(userName);
+		sb.append(", companyId=");
+		sb.append(companyId);
+		sb.append(", createDate=");
+		sb.append(createDate);
+		sb.append(", modifiedDate=");
+		sb.append(modifiedDate);
 		sb.append("}");
 
 		return sb.toString();
@@ -121,6 +135,31 @@ public class StageCacheModel implements CacheModel<Stage>, Externalizable {
 		}
 
 		stageImpl.setTripId(tripId);
+		stageImpl.setGroupId(groupId);
+		stageImpl.setUserId(userId);
+
+		if (userName == null) {
+			stageImpl.setUserName("");
+		}
+		else {
+			stageImpl.setUserName(userName);
+		}
+
+		stageImpl.setCompanyId(companyId);
+
+		if (createDate == Long.MIN_VALUE) {
+			stageImpl.setCreateDate(null);
+		}
+		else {
+			stageImpl.setCreateDate(new Date(createDate));
+		}
+
+		if (modifiedDate == Long.MIN_VALUE) {
+			stageImpl.setModifiedDate(null);
+		}
+		else {
+			stageImpl.setModifiedDate(new Date(modifiedDate));
+		}
 
 		stageImpl.resetOriginalValues();
 
@@ -138,6 +177,15 @@ public class StageCacheModel implements CacheModel<Stage>, Externalizable {
 		image = objectInput.readUTF();
 
 		tripId = objectInput.readLong();
+
+		groupId = objectInput.readLong();
+
+		userId = objectInput.readLong();
+		userName = objectInput.readUTF();
+
+		companyId = objectInput.readLong();
+		createDate = objectInput.readLong();
+		modifiedDate = objectInput.readLong();
 	}
 
 	@Override
@@ -180,6 +228,21 @@ public class StageCacheModel implements CacheModel<Stage>, Externalizable {
 		}
 
 		objectOutput.writeLong(tripId);
+
+		objectOutput.writeLong(groupId);
+
+		objectOutput.writeLong(userId);
+
+		if (userName == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(userName);
+		}
+
+		objectOutput.writeLong(companyId);
+		objectOutput.writeLong(createDate);
+		objectOutput.writeLong(modifiedDate);
 	}
 
 	public String uuid;
@@ -189,5 +252,11 @@ public class StageCacheModel implements CacheModel<Stage>, Externalizable {
 	public String place;
 	public String image;
 	public long tripId;
+	public long groupId;
+	public long userId;
+	public String userName;
+	public long companyId;
+	public long createDate;
+	public long modifiedDate;
 
 }
