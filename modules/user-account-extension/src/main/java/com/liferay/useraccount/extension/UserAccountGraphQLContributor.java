@@ -19,7 +19,10 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLTypeExtension;
 import com.liferay.portal.vulcan.graphql.contributor.GraphQLContributor;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Javier de Arcos
@@ -29,6 +32,11 @@ import org.osgi.service.component.annotations.Component;
 		service = GraphQLContributor.class
 )
 public class UserAccountGraphQLContributor implements GraphQLContributor {
+
+	@Activate
+	public void activate() {
+		UserAccountQueryContributor.setBiographyService(biographyService);
+	}
 
 	@Override
 	public String getPath() {
@@ -51,10 +59,23 @@ public class UserAccountGraphQLContributor implements GraphQLContributor {
 
 			@GraphQLField
 			public String biography() {
-				return "Hello World!";
+				return getGithubName(userAccount);
 			}
 
 			private final UserAccount userAccount;
 		}
+
+		private String getGithubName(UserAccount userAccount) {
+			return biographyService.getBiography(userAccount.getAlternateName());
+		}
+
+		public static void setBiographyService(BiographyService service) {
+			biographyService = service;
+		}
+
+		private static BiographyService biographyService;
 	}
+
+	@Reference
+	private BiographyService biographyService;
 }

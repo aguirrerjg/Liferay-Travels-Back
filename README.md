@@ -43,3 +43,4 @@ In this step we are adding and extension to the UserAccount existing resource in
 The steps to follow are:
 - Create a new module with blade `blade create -t service -s com.liferay.portal.vulcan.graphql.contributor.GraphQLContributor -p com.liferay.useraccount.extension user-account-extension`
 - Implement the GraphQLContributor interface implementing a query contributor with the help of the @GraphQLTypeExtension annotation and GraphQLField
+- Improve your GraphQLContributor connecting getting the information form a real external API.
