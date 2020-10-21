@@ -3,6 +3,7 @@ package com.liferay.travels.rest.client.dto.v1_0;
 import com.liferay.travels.rest.client.function.UnsafeSupplier;
 import com.liferay.travels.rest.client.serdes.v1_0.StageSerDes;
 
+import java.util.Map;
 import java.util.Objects;
 
 import javax.annotation.Generated;
@@ -17,6 +18,28 @@ public class Stage implements Cloneable {
 	public static Stage toDTO(String json) {
 		return StageSerDes.toDTO(json);
 	}
+
+	public Map<String, Map<String, String>> getActions() {
+		return actions;
+	}
+
+	public void setActions(Map<String, Map<String, String>> actions) {
+		this.actions = actions;
+	}
+
+	public void setActions(
+		UnsafeSupplier<Map<String, Map<String, String>>, Exception>
+			actionsUnsafeSupplier) {
+
+		try {
+			actions = actionsUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected Map<String, Map<String, String>> actions;
 
 	public String getDescription() {
 		return description;

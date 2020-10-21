@@ -4,6 +4,14 @@ components:
             description:
                 "A stage with some planned action, as a lunch, cultural tour or activity"
             properties:
+                actions:
+                    description: "Stage allowed actions"
+                    additionalProperties:
+                        additionalProperties:
+                            type: string
+                        type: object
+                    type: object
+                    readOnly: true
                 id:
                     description: "Stage identifier"
                     format: int64
@@ -29,6 +37,14 @@ components:
             description:
                 "A trip is defined by a name, starting date and set of stages"
             properties:
+                actions:
+                    description: "Trip allowed actions"
+                    additionalProperties:
+                        additionalProperties:
+                            type: string
+                        type: object
+                    type: object
+                    readOnly: true
                 id:
                     description: "Trip identifier"
                     format: int64

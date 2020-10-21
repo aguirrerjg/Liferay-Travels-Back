@@ -47,6 +47,16 @@ public class TripSerDes {
 		DateFormat liferayToJSONDateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
 
+		if (trip.getActions() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"actions\": ");
+
+			sb.append(_toJSON(trip.getActions()));
+		}
+
 		if (trip.getDescription() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -154,6 +164,13 @@ public class TripSerDes {
 		DateFormat liferayToJSONDateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
 
+		if (trip.getActions() == null) {
+			map.put("actions", null);
+		}
+		else {
+			map.put("actions", String.valueOf(trip.getActions()));
+		}
+
 		if (trip.getDescription() == null) {
 			map.put("description", null);
 		}
@@ -218,7 +235,13 @@ public class TripSerDes {
 			Trip trip, String jsonParserFieldName,
 			Object jsonParserFieldValue) {
 
-			if (Objects.equals(jsonParserFieldName, "description")) {
+			if (Objects.equals(jsonParserFieldName, "actions")) {
+				if (jsonParserFieldValue != null) {
+					trip.setActions(
+						(Map)TripSerDes.toMap((String)jsonParserFieldValue));
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "description")) {
 				if (jsonParserFieldValue != null) {
 					trip.setDescription((String)jsonParserFieldValue);
 				}

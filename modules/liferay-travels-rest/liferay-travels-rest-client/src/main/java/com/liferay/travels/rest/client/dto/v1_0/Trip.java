@@ -4,6 +4,7 @@ import com.liferay.travels.rest.client.function.UnsafeSupplier;
 import com.liferay.travels.rest.client.serdes.v1_0.TripSerDes;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.annotation.Generated;
@@ -18,6 +19,28 @@ public class Trip implements Cloneable {
 	public static Trip toDTO(String json) {
 		return TripSerDes.toDTO(json);
 	}
+
+	public Map<String, Map<String, String>> getActions() {
+		return actions;
+	}
+
+	public void setActions(Map<String, Map<String, String>> actions) {
+		this.actions = actions;
+	}
+
+	public void setActions(
+		UnsafeSupplier<Map<String, Map<String, String>>, Exception>
+			actionsUnsafeSupplier) {
+
+		try {
+			actions = actionsUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected Map<String, Map<String, String>> actions;
 
 	public String getDescription() {
 		return description;

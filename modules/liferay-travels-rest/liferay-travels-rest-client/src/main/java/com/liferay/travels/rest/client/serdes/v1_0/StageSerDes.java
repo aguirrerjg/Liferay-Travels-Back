@@ -39,6 +39,16 @@ public class StageSerDes {
 
 		sb.append("{");
 
+		if (stage.getActions() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"actions\": ");
+
+			sb.append(_toJSON(stage.getActions()));
+		}
+
 		if (stage.getDescription() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -123,6 +133,13 @@ public class StageSerDes {
 
 		Map<String, String> map = new TreeMap<>();
 
+		if (stage.getActions() == null) {
+			map.put("actions", null);
+		}
+		else {
+			map.put("actions", String.valueOf(stage.getActions()));
+		}
+
 		if (stage.getDescription() == null) {
 			map.put("description", null);
 		}
@@ -178,7 +195,13 @@ public class StageSerDes {
 			Stage stage, String jsonParserFieldName,
 			Object jsonParserFieldValue) {
 
-			if (Objects.equals(jsonParserFieldName, "description")) {
+			if (Objects.equals(jsonParserFieldName, "actions")) {
+				if (jsonParserFieldValue != null) {
+					stage.setActions(
+						(Map)StageSerDes.toMap((String)jsonParserFieldValue));
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "description")) {
 				if (jsonParserFieldValue != null) {
 					stage.setDescription((String)jsonParserFieldValue);
 				}

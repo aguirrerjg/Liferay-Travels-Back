@@ -68,7 +68,7 @@ public class Query {
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {stage(stageId: ___){id, name, description, place, image}}"}' -u 'test@liferay.com:test'
+	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {stage(stageId: ___){actions, id, name, description, place, image}}"}' -u 'test@liferay.com:test'
 	 */
 	@GraphQLField
 	public Stage stage(@GraphQLName("stageId") Long stageId) throws Exception {
@@ -105,7 +105,7 @@ public class Query {
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {trip(tripId: ___){id, name, description, starting-date, image, stages}}"}' -u 'test@liferay.com:test'
+	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {trip(tripId: ___){actions, id, name, description, starting-date, image, stages}}"}' -u 'test@liferay.com:test'
 	 */
 	@GraphQLField
 	public Trip trip(@GraphQLName("tripId") Long tripId) throws Exception {

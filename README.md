@@ -59,3 +59,9 @@ We make use of the APIs infrastructure and, in concrete, of SearchUtil class to 
 The steps are:
 - Modify the OpenAPI with new path parameters and run REST Builder
 - Implement the new features using SearchUtil class
+
+## Step 6: Add actions
+We make use of the addAction base methods in resources to implement the actions feature release in 7.3 in our custom API
+
+The steps are:
+- Modify the OpenAPI with new path parameters and run REST Builder
