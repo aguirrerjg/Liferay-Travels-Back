@@ -57,4 +57,5 @@ The steps are:
 We make use of the APIs infrastructure and, in concrete, of SearchUtil class to provide filter, pargination, search and sort to the endpoint getting all trips
 
 The steps are:
-- Modify the OpenAPI with new path parameters and run REST Builder 
+- Modify the OpenAPI with new path parameters and run REST Builder
+- Implement the new features using SearchUtil class
